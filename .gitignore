@@ -1,0 +1,11 @@
+# Claude Code local settings
+.claude/settings.local.json
+
+# Dictionary data files (large, not source code)
+*.u8
+cedict_*.txt
+CVDICT-*/
+
+# OS
+.DS_Store
+Thumbs.db
