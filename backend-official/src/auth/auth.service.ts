@@ -1,61 +1,63 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '@/modules/users/users.service';
 import { comparePasswordHelper } from '@/helpers/util';
 import { JwtService } from '@nestjs/jwt';
-import { ChangePasswordAuthDto, CodeAuthDto, CreateAuthDto } from './dto/create-auth.dto';
+import { ChangePasswordAuthDto, CodeAuthDto, CreateAuthDto } from '@/auth/dto/create-auth.dto';
+import { User } from '@/modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService
-  ) { }
+    constructor(
+        private usersService: UsersService,
+        private jwtService: JwtService,
+    ) {}
 
+    async validateUser(username: string, password: string): Promise<User | null> {
+        const user = await this.usersService.findByEmail(username);
+        if (!user) {
+            return null;
+        }
+        const isValidPassword = await comparePasswordHelper(password, user.password);
+        if (!isValidPassword) {
+            return null;
+        }
+        return user;
+    }
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findByEmail(username);
-    if (!user) return null;
+    async login(user: User) {
+        const payload = { username: user.email, sub: user.id };
+        return {
+            user: {
+                email: user.email,
+                _id: user.id,
+                name: user.name,
+                role: user.role,
+            },
+            access_token: this.jwtService.sign(payload),
+        };
+    }
 
-    const isValidPassword = await comparePasswordHelper(pass, user.password);
-    if (!isValidPassword) return null;
-    return user;
-  }
+    handleRegister = async (registerDto: CreateAuthDto) => {
+        return await this.usersService.handleRegister(registerDto);
+    }
 
-  async login(user: any) {
-    const payload = { username: user.email, sub: user.id };
-    return {
-      user: {
-        email: user.email,
-        _id: user.id,
-        name: user.name,
-        role: user.role,
-      },
-      access_token: this.jwtService.sign(payload),
-    };
-  }
+    checkCode = async (data: CodeAuthDto) => {
+        return await this.usersService.handleActive(data);
+    }
 
-  handleRegister = async (registerDto: CreateAuthDto) => {
-    return await this.usersService.handleRegister(registerDto);
-  }
+    retryActive = async (data: string) => {
+        return await this.usersService.retryActive(data);
+    }
 
-  checkCode = async (data: CodeAuthDto) => {
-    return await this.usersService.handleActive(data);
-  }
+    retryPassword = async (data: string) => {
+        return await this.usersService.retryPassword(data);
+    }
 
-  retryActive = async (data: string) => {
-    return await this.usersService.retryActive(data);
-  }
+    changePassword = async (data: ChangePasswordAuthDto) => {
+        return await this.usersService.changePassword(data);
+    }
 
-  retryPassword = async (data: string) => {
-    return await this.usersService.retryPassword(data);
-  }
-
-  changePassword = async (data: ChangePasswordAuthDto) => {
-    return await this.usersService.changePassword(data);
-  }
-
-  getProfile = async (id: string) => {
-    return await this.usersService.findOne(id);
-  }
-
+    getProfile = async (id: string) => {
+        return await this.usersService.findOne(id);
+    }
 }

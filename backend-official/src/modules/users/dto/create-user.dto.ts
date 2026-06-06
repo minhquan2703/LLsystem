@@ -1,17 +1,26 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
+import { IsEmail, IsIn, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
-    @IsNotEmpty({ message: "name không được để trống" })
+    @IsNotEmpty()
     name: string;
 
-    @IsNotEmpty({ message: "email không được để trống" })
-    @IsEmail({}, { message: 'email không đúng định dạng' })
+    @IsNotEmpty()
+    @IsEmail()
     email: string;
 
-    @IsNotEmpty({ message: "password không được để trống" })
+    @IsNotEmpty()
     password: string;
 
+    @IsOptional()
     phone: string;
+
+    @IsOptional()
     address: string;
+
+    @IsOptional()
     image: string;
+
+    @IsNotEmpty()
+    @IsIn(['USER', 'ADMIN'])
+    role: string;
 }
