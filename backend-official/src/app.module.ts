@@ -13,6 +13,8 @@ import { JwtAuthGuard } from '@/auth/passport/jwt-auth.guard';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TransformInterceptor } from '@/core/transform.interceptor';
+import { LearningModule } from '@/modules/learning/learning.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -21,6 +23,11 @@ import { TransformInterceptor } from '@/core/transform.interceptor';
     TopicsModule,
     ExamplesModule,
     AuthModule,
+    LearningModule,
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 10,
+    }]),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -63,6 +70,7 @@ import { TransformInterceptor } from '@/core/transform.interceptor';
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
   ],
 })
