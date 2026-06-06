@@ -1,0 +1,63 @@
+{
+    "errors": {
+        "USER_NOT_FOUND": "User not found",
+        "EMAIL_EXISTS": "Email already exists, please use another",
+        "INVALID_CREDENTIALS": "Invalid email or password",
+        "ACCOUNT_INACTIVE": "Account has not been activated",
+        "ACCOUNT_ALREADY_ACTIVE": "Account is already active",
+        "INVALID_CODE": "Code is invalid or has expired",
+        "CODE_EXPIRED": "Code has expired",
+        "PASSWORD_MISMATCH": "Password and confirmation do not match",
+        "WORD_NOT_FOUND": "Word not found",
+        "WORD_ALREADY_IN_LIST": "This word is already in your study list",
+        "LEARNING_ENTRY_NOT_FOUND": "Learning record not found",
+        "TOPIC_NOT_FOUND": "Topic not found",
+        "EXAMPLE_NOT_FOUND": "Example sentence not found"
+    },
+    "nav": {
+        "home": "Home",
+        "learn": "Review",
+        "login": "Log in",
+        "register": "Sign up",
+        "logout": "Log out",
+        "dashboard": "Dashboard",
+        "greeting": "Hello"
+    },
+    "home": {
+        "hero_title": "Learn Chinese",
+        "hero_title_accent": "Systematically",
+        "hero_desc": "A Chinese vocabulary system organized by topic, with pinyin, sino-Vietnamese, and real example sentences.",
+        "start_free": "Start for free",
+        "feature_topics_title": "Topic-based",
+        "feature_topics_desc": "Vocabulary organized by topic: family, work, travel, food...",
+        "feature_vocab_title": "Structured vocabulary",
+        "feature_vocab_desc": "Each word includes pinyin, sino-Vietnamese reading, English and Vietnamese meanings.",
+        "feature_srs_title": "Spaced repetition",
+        "feature_srs_desc": "SM-2 algorithm schedules reviews optimally so you remember more in less time.",
+        "stat_words": "words",
+        "stat_hsk": "HSK 1–9 standard",
+        "stat_free": "Free"
+    },
+    "dashboard": {
+        "greeting": "Hello",
+        "total_words": "Studying",
+        "due_today": "Due today",
+        "review_now": "Review now",
+        "review_now_count": "Review now ({count} words)",
+        "all_done": "All done for today!",
+        "start_learning": "Add words to start studying"
+    },
+    "flashcard": {
+        "tap_to_reveal": "Tap to reveal",
+        "forgot": "Forgot",
+        "hard": "Hard",
+        "remembered": "Got it",
+        "mastered": "Easy",
+        "completed_title": "All done!",
+        "completed_desc": "You have reviewed all words for today",
+        "back_home": "Back to home",
+        "no_due_title": "Nothing to review",
+        "no_due_desc": "You haven't added any words to your list yet, or you've already reviewed everything today.",
+        "progress": "{done}/{total} words"
+    }
+}

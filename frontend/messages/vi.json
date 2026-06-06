@@ -1,0 +1,63 @@
+{
+    "errors": {
+        "USER_NOT_FOUND": "Người dùng không tồn tại",
+        "EMAIL_EXISTS": "Email đã tồn tại, vui lòng dùng email khác",
+        "INVALID_CREDENTIALS": "Email hoặc mật khẩu không hợp lệ",
+        "ACCOUNT_INACTIVE": "Tài khoản chưa được kích hoạt",
+        "ACCOUNT_ALREADY_ACTIVE": "Tài khoản đã được kích hoạt",
+        "INVALID_CODE": "Mã code không hợp lệ hoặc đã hết hạn",
+        "CODE_EXPIRED": "Mã code đã hết hạn",
+        "PASSWORD_MISMATCH": "Mật khẩu và xác nhận mật khẩu không khớp",
+        "WORD_NOT_FOUND": "Từ không tồn tại",
+        "WORD_ALREADY_IN_LIST": "Từ này đã có trong danh sách học",
+        "LEARNING_ENTRY_NOT_FOUND": "Không tìm thấy bản ghi học",
+        "TOPIC_NOT_FOUND": "Chủ đề không tồn tại",
+        "EXAMPLE_NOT_FOUND": "Câu ví dụ không tồn tại"
+    },
+    "nav": {
+        "home": "Trang chủ",
+        "learn": "Ôn tập",
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "logout": "Đăng xuất",
+        "dashboard": "Quản lý",
+        "greeting": "Xin chào"
+    },
+    "home": {
+        "hero_title": "Học Tiếng Trung",
+        "hero_title_accent": "Có Hệ Thống",
+        "hero_desc": "Hệ thống học từ vựng tiếng Trung theo chủ đề, có pinyin, hán việt và câu ví dụ thực tế.",
+        "start_free": "Bắt đầu miễn phí",
+        "feature_topics_title": "Chủ đề phân loại",
+        "feature_topics_desc": "Từ vựng tổ chức theo chủ đề: gia đình, công việc, du lịch, ẩm thực...",
+        "feature_vocab_title": "Từ vựng có hệ thống",
+        "feature_vocab_desc": "Mỗi từ có pinyin, hán việt, nghĩa tiếng Anh và tiếng Việt.",
+        "feature_srs_title": "Lặp lại có giãn cách",
+        "feature_srs_desc": "Thuật toán SM-2 lên lịch ôn tập tối ưu, giúp nhớ lâu với thời gian ngắn nhất.",
+        "stat_words": "từ vựng",
+        "stat_hsk": "Chuẩn HSK 1–9",
+        "stat_free": "Miễn phí"
+    },
+    "dashboard": {
+        "greeting": "Xin chào",
+        "total_words": "Đang học",
+        "due_today": "Cần ôn hôm nay",
+        "review_now": "Ôn tập ngay",
+        "review_now_count": "Ôn tập ngay ({count} từ)",
+        "all_done": "Hôm nay đã ôn xong!",
+        "start_learning": "Thêm từ mới để học"
+    },
+    "flashcard": {
+        "tap_to_reveal": "Nhấn để xem nghĩa",
+        "forgot": "Quên rồi",
+        "hard": "Khó nhớ",
+        "remembered": "Nhớ được",
+        "mastered": "Thuộc lòng",
+        "completed_title": "Hoàn thành!",
+        "completed_desc": "Đã ôn xong tất cả từ hôm nay",
+        "back_home": "Về trang chủ",
+        "no_due_title": "Không có từ nào cần ôn",
+        "no_due_desc": "Bạn chưa thêm từ nào vào danh sách học hoặc hôm nay đã ôn xong.",
+        "progress": "{done}/{total} từ"
+    }
+}
