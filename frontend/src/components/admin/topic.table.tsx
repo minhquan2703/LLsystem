@@ -82,8 +82,12 @@ const TopicTable = ({ topics }: IProps) => {
                 scroll={{ x: 600 }}
                 pagination={{ pageSize: 10, showTotal: (total) => `${total} chủ đề` }}
             />
-            <TopicCreate isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />
-            <TopicUpdate isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} data={dataUpdate} setData={setDataUpdate} />
+            {isCreateOpen && (
+                <TopicCreate isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />
+            )}
+            {isUpdateOpen && dataUpdate && (
+                <TopicUpdate isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} data={dataUpdate} setData={setDataUpdate} />
+            )}
         </>
     )
 }

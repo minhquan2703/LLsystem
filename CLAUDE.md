@@ -3,197 +3,114 @@
 ## Import paths
 Always use the `@/*` alias instead of relative paths.
 
-```ts
-// correct
-import { AppService } from '@/app.service'
-import { UserModule } from '@/users/user.module'
-
-// wrong
-import { AppService } from './app.service'
-import { UserModule } from '../../users/user.module'
-```
-
 ## Code style
-- Follow the existing template patterns for naming and structure
-- Variable and function names: camelCase, descriptive but short
+- Variable and function names: camelCase, **full and descriptive — no abbreviations**
 - Prefer simple, flat logic over nested abstractions
 - No unnecessary wrapper classes or helper utilities unless reused 3+ times
 
+```ts
+// correct
+const userWord = await this.userWordRepo.findOne(...)
+export function handleSubmitWordReviewAction() {}
+export function calculateSpacedRepetition() {}
+
+// wrong — abbreviations forbidden
+const uw = await this.userWordRepo.findOne(...)
+export function sm2() {}
+```
+
 ## Comments
-Write no comments by default. If a comment is truly necessary, use lowercase with no punctuation.
+Write no comments by default. Add step-by-step comments inside **complex functions** (multi-step algorithms, non-obvious logic). Format: `//comment` — no space after `//`, lowercase, no punctuation.
+
+```ts
+//tính khoảng cách ôn tập tiếp theo   ← correct
+// tính khoảng cách ôn tập tiếp theo  ← wrong (space after //)
+```
+
+Never add emoji into JSX/HTML or comments.
+
+## Control flow
+Always use braces `{}` for `if`/`else`/`for` blocks, even single-statement.
+
+## Object formatting
+Multi-line objects must be expanded — never inline when the value is long. Applies to `sendRequest` params and JSX props objects.
 
 ```ts
 // correct
-// hàm xử lý scroll
+headers: {
+    Authorization: `Bearer ${token}`,
+},
+nextOption: {
+    next: { tags: ['list-users'] }
+},
 
 // wrong
-// Hàm Xử Lý Scroll
-// Handle scroll function
+headers: { Authorization: `Bearer ${token}` },
 ```
-
-Never add icon characters or emoji into JSX/HTML elements or comments. Use icon library components (`<SearchOutlined />`) only when genuinely needed for UX — do not decorate.
 
 ## Explanations
-When introducing a concept, decorator, or term the user may not know, add a 1–3 line explanation inline in the response — no need for the user to ask.
+When introducing a concept, decorator, or term the user may not know, add a 1–3 line explanation inline — no need for the user to ask.
 
 ## Responsive design
-All frontend pages must be responsive and display correctly on mobile.
-Use Ant Design's Grid (`Row` / `Col` with `xs` / `sm` / `md` / `lg` breakpoints) — already installed, zero config overhead.
-**Trade-off vs Tailwind CSS:** antd Grid is less flexible (24-column system only) but requires no build config and stays consistent with the existing component library. Add Tailwind only if antd Grid proves insufficient.
-Never write fixed-width layouts. Every page needs at minimum `xs` (mobile) and `md` (desktop) breakpoints.
-For fluid typography use `clamp()`: `font-size: clamp(28px, 5vw, 48px)`.
+All frontend pages must be responsive. Use antd Grid (`Row` / `Col` with `xs` / `md` breakpoints). Never write fixed-width layouts. Fluid typography: `font-size: clamp(28px, 5vw, 48px)`.
 
 ## CSS architecture
-Component-specific styles (keyframes, hover states, class-based layout) go in a colocated `.module.css` file next to the component — e.g., `alert.context.module.css` next to `alert.context.tsx`.
-Only global resets, CSS variables, and font imports belong in `globals.css`.
-Type declarations for CSS imports go in `src/types/css.d.ts`.
+Component-specific styles go in a colocated `.module.css` file. Only global resets and CSS variables belong in `globals.css`.
 
 ## CSS (frontend)
-Write the shortest CSS that achieves the goal. Use shorthand and utility-first patterns.
-
-```css
-/* correct — 2 lines */
-display: flex;
-place-items: center;
-
-/* wrong — 5 lines */
-display: flex;
-justify-content: center;
-align-items: center;
-flex-direction: row;
-flex-wrap: nowrap;
-```
-
-Prefer Ant Design (`antd`) components over plain HTML elements. Check antd docs before writing a custom `<button>`, `<input>`, `<table>`, etc.
+Write the shortest CSS that achieves the goal. Prefer antd components over plain HTML elements.
 
 ## Next.js — Server vs Client Components
-Default to Server Component (no directive needed). Only add `'use client'` when the component uses `useState`, `useEffect`, or event handlers like `onClick`.
+Default to Server Component. Only add `'use client'` when using `useState`, `useEffect`, or event handlers.
+
+## Modal mount pattern
+Only mount modals when they need to be shown. Never keep a modal always in DOM unless it fetches data on mount (e.g. loads a dropdown from API).
 
 ```tsx
-// server component — no directive, runs on server, can be async
-export default async function Page() { ... }
+// correct — unmounts when closed, form always fresh
+{isCreateOpen && <TopicCreate isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />}
+{isUpdateOpen && dataUpdate && (
+    <TopicUpdate isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} data={dataUpdate} setData={setDataUpdate} />
+)}
 
-// client component — add directive at top of file
-'use client'
-export default function Counter() {
-  const [count, setCount] = useState(0)
-  ...
-}
+// wrong — always in DOM, needs manual form.resetFields()
+<TopicCreate isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />
 ```
+
+Pattern A (always mounted) is only justified when the modal initializes with an API call that you don't want to re-trigger on every open.
 
 ## API calls
 Always use `sendRequest<T>` from `@/utils/api.ts`. Never call `fetch` directly.
 
-```tsx
-// correct
-const res = await sendRequest<IBackendRes<IUser>>({ url: '...', method: 'GET' })
-
-// wrong
-const res = await fetch('...').then(r => r.json())
-```
-
 ## Backend response types
-Always wrap the expected data type with `IBackendRes<T>` when typing API responses.
-
-```tsx
-const res = await sendRequest<IBackendRes<IUser[]>>({ ... })
-// res.data is IUser[], res.statusCode is number, res.message is string
-```
+Always wrap with `IBackendRes<T>`: `sendRequest<IBackendRes<IUser[]>>({ ... })`.
 
 ## Shared types
-Types used in more than one file go into `@/types/backend.d.ts` as `declare global` interfaces — no import needed anywhere in the project.
+Types used in more than one file go into `@/types/backend.d.ts` as `declare global` interfaces.
 
 ## Component file naming
-Use dot notation to reflect parent-child relationships. No PascalCase filenames.
-
-```
-// correct
-user.table.tsx
-modal.change.password.tsx
-admin.card.tsx
-
-// wrong
-UserTable.tsx
-ModalChangePassword.tsx
-```
+Dot notation, no PascalCase: `user.table.tsx`, `modal.change.password.tsx`.
 
 ## Server Actions for mutations
-Create / update / delete operations go in `@/utils/actions.ts` as Next.js Server Actions — no need to create a separate `/api/...` route. Always call `revalidateTag()` after mutating to invalidate the cached list.
-
-```ts
-// correct — in @/utils/actions.ts
-'use server'
-export async function handleCreateUserAction(data: ICreateUser) {
-  await sendRequest({ url: '...', method: 'POST', body: data })
-  revalidateTag('list-users')
-}
-
-// wrong — creating an extra API route just for CRUD
-// app/api/users/route.ts → POST handler
-```
+Create / update / delete → `@/utils/actions.ts` as Server Actions. Always call `revalidateTag()` after mutating.
 
 ## NextAuth session access
-Access the session differently depending on where the code runs.
-
 ```tsx
 // server component / server action
-import { auth } from '@/auth'
 const session = await auth()
 
 // client component
-import { useSession } from 'next-auth/react'
 const { data: session } = useSession()
 ```
 
 ## NestJS architecture
-Controller handles HTTP only (receive request, return response). All business logic lives in Service.
-
-```ts
-// correct
-@Get()
-getAll() {
-  return this.usersService.findAll() // logic in service
-}
-
-// wrong
-@Get()
-async getAll() {
-  const users = await this.dataSource.query('SELECT * FROM users') // logic in controller
-  return users.filter(u => u.isActive)
-}
-```
+Controller handles HTTP only. All business logic lives in Service.
 
 ## Environment variables
-Always read config via `ConfigService`. Never hardcode URLs, passwords, or keys.
-
-```ts
-// correct
-const host = this.configService.get('DB_HOST')
-
-// wrong
-const host = 'aws-1-ap-northeast-2.pooler.supabase.com'
-```
+Always read via `ConfigService`. Never hardcode URLs, passwords, or keys.
 
 ## DTOs
-Every request input (body, query param, route param) must have an explicit DTO with typed fields. No raw `req.body` access.
-
-```ts
-// correct
-@Post()
-create(@Body() dto: CreateUserDto) { ... }
-
-// wrong
-@Post()
-create(@Body() body: any) { ... }
-```
+Every request input must have an explicit DTO. No `body: any`.
 
 ## TypeScript types
-Avoid `any`. Use the actual type or `unknown` if unsure.
-
-```ts
-// correct
-const user: User = await this.usersService.findOne(id)
-
-// wrong
-const user: any = await this.usersService.findOne(id)
-```
+Avoid `any`. Use the actual type or `unknown`.

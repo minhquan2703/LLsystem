@@ -6,6 +6,7 @@ import {
     FileTextOutlined,
     TagsOutlined,
     TeamOutlined,
+    TranslationOutlined,
 } from '@ant-design/icons'
 import { useContext } from 'react'
 import { AdminContext } from '@/library/admin.context'
@@ -33,6 +34,11 @@ const AdminSideBar = () => {
                     key: 'users',
                     label: <Link href="/dashboard/user">Người dùng</Link>,
                     icon: <TeamOutlined />,
+                },
+                {
+                    key: 'words',
+                    label: <Link href="/dashboard/product">Từ vựng</Link>,
+                    icon: <TranslationOutlined />,
                 },
                 {
                     key: 'topics',

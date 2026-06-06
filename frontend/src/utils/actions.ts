@@ -1,8 +1,19 @@
 'use server'
 
-import { auth, signIn } from "@/auth";
-import { revalidateTag } from 'next/cache'
-import { sendRequest } from "./api";
+import { auth, signIn } from '@/auth';
+import { revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
+import { sendRequest } from '@/utils/api';
+import { LOCALE_COOKIE, LOCALES, type Locale } from '@/i18n/request';
+
+// ── Locale ────────────────────────────────────────────────────────────────────
+
+export const switchLocaleAction = async (locale: Locale) => {
+    if (!LOCALES.includes(locale)) {
+        return;
+    }
+    cookies().set(LOCALE_COOKIE, locale, { maxAge: 365 * 24 * 60 * 60, path: '/' });
+}
 
 
 export async function authenticate(username: string, password: string) {
@@ -37,45 +48,70 @@ export async function authenticate(username: string, password: string) {
     }
 }
 
-export const handleCreateUserAction = async (data: any) => {
+export const handleCreateUserAction = async (data: Omit<IUser, 'id' | 'createdAt' | 'updatedAt' | 'isActive'> & { password: string }) => {
     const session = await auth();
-    const res = await sendRequest<IBackendRes<any>>({
+    const res = await sendRequest<IBackendRes<IUser>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
-        method: "POST",
+        method: 'POST',
         headers: {
             Authorization: `Bearer ${session?.user?.access_token}`,
         },
-        body: { ...data }
+        body: { ...data },
     })
-    revalidateTag("list-users")
+    revalidateTag('list-users')
     return res;
 }
 
-export const handleUpdateUserAction = async (data: any) => {
+export const handleUpdateUserAction = async (data: Partial<IUser> & { id: string }) => {
     const session = await auth();
-    const res = await sendRequest<IBackendRes<any>>({
+    const res = await sendRequest<IBackendRes<IUser>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
-        method: "PATCH",
-        headers: {
-            Authorization: `Bearer ${session?.user?.access_token}`,
-        },
-        body: { ...data }
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${session?.user?.access_token}` },
+        body: { ...data },
     })
-    revalidateTag("list-users")
+    revalidateTag('list-users')
     return res;
 }
 
-export const handleDeleteUserAction = async (id: any) => {
+export const handleDeleteUserAction = async (id: string) => {
     const session = await auth();
-    const res = await sendRequest<IBackendRes<any>>({
+    const res = await sendRequest<IBackendRes<unknown>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
             Authorization: `Bearer ${session?.user?.access_token}`,
         },
     })
+    revalidateTag('list-users')
+    return res;
+}
 
-    revalidateTag("list-users")
+// ── Learning ──────────────────────────────────────────────────────────────────
+
+export const handleAddWordToLearningAction = async (wordId: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IUserWord>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/learning/add`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: { wordId },
+    })
+    return res;
+}
+
+export const handleSubmitWordReviewAction = async (userWordId: number, quality: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IUserWord>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/learning/review`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: { userWordId, quality },
+    })
     return res;
 }
 
@@ -150,5 +186,42 @@ export const handleDeleteExampleAction = async (id: number) => {
         headers: { Authorization: `Bearer ${session?.user?.access_token}` },
     })
     revalidateTag("list-examples")
+    return res;
+}
+
+// ── Words ─────────────────────────────────────────────────────────────────────
+
+export const handleCreateWordAction = async (data: Partial<Omit<IWord, 'id' | 'createdAt' | 'updatedAt'>>) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IWord>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/words`,
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.user?.access_token}` },
+        body: { ...data },
+    })
+    revalidateTag('list-words')
+    return res;
+}
+
+export const handleUpdateWordAction = async (id: number, data: Partial<Omit<IWord, 'id' | 'createdAt' | 'updatedAt'>>) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IWord>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/words/${id}`,
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${session?.user?.access_token}` },
+        body: { ...data },
+    })
+    revalidateTag('list-words')
+    return res;
+}
+
+export const handleDeleteWordAction = async (id: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<unknown>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/words/${id}`,
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${session?.user?.access_token}` },
+    })
+    revalidateTag('list-words')
     return res;
 }

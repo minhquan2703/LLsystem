@@ -58,4 +58,59 @@ declare global {
         createdAt: string;
     }
 
+    interface IUser {
+        id: string;
+        name: string;
+        email: string;
+        phone: string | null;
+        address: string | null;
+        image: string | null;
+        role: string;
+        accountType: string;
+        learnLang: string;
+        transLang: string;
+        isActive: boolean;
+        createdAt: string;
+        updatedAt: string;
+    }
+
+    interface IUserWord {
+        id: number;
+        userId: string;
+        wordId: number;
+        word: IWord;
+        repetitions: number;
+        easeFactor: number;
+        interval: number;
+        nextReview: string;
+        lastReview: string | null;
+        createdAt: string;
+    }
+
+    interface ILearningStats {
+        total: number;
+        dueToday: number;
+    }
+
+    interface ILearningDue {
+        dueCount: number;
+        total: number;
+        words: IUserWord[];
+    }
+
+    interface IWord {
+        id: number;
+        simplified: string;
+        traditional: string | null;
+        pinyin: string | null;
+        hanViet: string | null;
+        englishDef: string | null;
+        vietnameseDef: string | null;
+        hskLevel: number | null;
+        partOfSpeech: string | null;
+        frequency: number | null;
+        createdAt: string;
+        updatedAt: string;
+    }
+
 }

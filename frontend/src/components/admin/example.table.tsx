@@ -89,8 +89,12 @@ const ExampleTable = ({ examples }: IProps) => {
                 scroll={{ x: 700 }}
                 pagination={{ pageSize: 10, showTotal: (total) => `${total} câu ví dụ` }}
             />
-            <ExampleCreate isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />
-            <ExampleUpdate isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} data={dataUpdate} setData={setDataUpdate} />
+            {isCreateOpen && (
+                <ExampleCreate isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />
+            )}
+            {isUpdateOpen && dataUpdate && (
+                <ExampleUpdate isOpen={isUpdateOpen} setIsOpen={setIsUpdateOpen} data={dataUpdate} setData={setDataUpdate} />
+            )}
         </>
     )
 }

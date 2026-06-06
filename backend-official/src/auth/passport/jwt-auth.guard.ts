@@ -17,15 +17,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         if (isPublic) {
             return true;
         }
-        // Add your custom authentication logic here
-        // for example, call super.logIn(request) to establish a session.
         return super.canActivate(context);
     }
 
-    handleRequest(err, user, info) {
-        // You can throw an exception based on either "info" or "err" arguments
+    handleRequest(err: Error, user: unknown) {
         if (err || !user) {
-            throw err || new UnauthorizedException("Access Token không hợp lệ hoặc không có tại header.");
+            throw err || new UnauthorizedException('Access Token không hợp lệ hoặc không có tại header.');
         }
         return user;
     }

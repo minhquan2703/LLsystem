@@ -1,86 +1,104 @@
-
+'use client'
 import { handleCreateUserAction } from '@/utils/actions';
-import {
-    Modal, Input, Form, Row, Col, message,
-    notification
-} from 'antd';
+import { useAlert } from '@/library/alert.context';
+import { Modal, Input, Form, Row, Col, Select } from 'antd';
 
-interface IProps {
-    isCreateModalOpen: boolean;
-    setIsCreateModalOpen: (v: boolean) => void;
+interface ICreateUserForm {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    phone?: string;
+    address?: string;
 }
 
-const UserCreate = (props: IProps) => {
+interface IProps {
+    isOpen: boolean;
+    setIsOpen: (value: boolean) => void;
+}
 
-    const {
-        isCreateModalOpen, setIsCreateModalOpen
-    } = props;
+const ROLE_OPTIONS = [
+    { value: 'USER', label: 'Người dùng' },
+    { value: 'ADMIN', label: 'Quản trị viên' },
+]
 
-    const [form] = Form.useForm();
+const UserCreate = ({ isOpen, setIsOpen }: IProps) => {
+    const [form] = Form.useForm<ICreateUserForm>();
+    const { alert } = useAlert();
 
-    const handleCloseCreateModal = () => {
-        form.resetFields()
-        setIsCreateModalOpen(false);
-
+    const handleClose = () => {
+        form.resetFields();
+        setIsOpen(false);
     }
 
-    const onFinish = async (values: any) => {
+    const handleSubmitForm = async (values: ICreateUserForm) => {
         const res = await handleCreateUserAction(values);
         if (res?.data) {
-            handleCloseCreateModal();
-            message.success("Create succeed!")
+            handleClose();
+            alert('success', 'Tạo tài khoản thành công');
         } else {
-            notification.error({
-                message: "Create User error",
-                description: res?.message
-            })
+            alert('error', 'Tạo thất bại', String(res?.message));
         }
-
-    };
+    }
 
     return (
         <Modal
-            title="Add new user"
-            open={isCreateModalOpen}
+            title="Thêm người dùng"
+            open={isOpen}
             onOk={() => form.submit()}
-            onCancel={() => handleCloseCreateModal()}
+            onCancel={handleClose}
             maskClosable={false}
+            width={560}
         >
-            <Form
-                name="basic"
-                onFinish={onFinish}
-                layout="vertical"
-                form={form}
-            >
-                <Row gutter={[15, 15]}>
-                    <Col span={24} >
+            <Form form={form} layout="vertical" onFinish={handleSubmitForm}>
+                <Row gutter={[16, 0]}>
+                    <Col xs={24}>
                         <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[{ required: true, message: 'Please input your email!' }]}
-                        >
-                            <Input type='email' />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24}>
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[{ required: true, message: 'Please input your password!' }]}
-                        >
-                            <Input.Password />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24} >
-                        <Form.Item
-                            label="Name"
+                            label="Họ và tên"
                             name="name"
-                            rules={[{ required: true, message: 'Please input your name!' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập họ tên' }]}
                         >
                             <Input />
                         </Form.Item>
                     </Col>
-
+                    <Col xs={24} md={12}>
+                        <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[{ required: true, type: 'email', message: 'Email không hợp lệ' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24} md={12}>
+                        <Form.Item
+                            label="Mật khẩu"
+                            name="password"
+                            rules={[{ required: true, min: 6, message: 'Ít nhất 6 ký tự' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24} md={12}>
+                        <Form.Item
+                            label="Vai trò"
+                            name="role"
+                            initialValue="USER"
+                            rules={[{ required: true }]}
+                        >
+                            <Select options={ROLE_OPTIONS} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24} md={12}>
+                        <Form.Item label="Số điện thoại" name="phone">
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24}>
+                        <Form.Item label="Địa chỉ" name="address">
+                            <Input />
+                        </Form.Item>
+                    </Col>
                 </Row>
             </Form>
         </Modal>
