@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Param, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
 import { LearningService } from '@/modules/learning/learning.service';
 import { AddWordDto } from '@/modules/learning/dto/add-word.dto';
@@ -33,5 +33,11 @@ export class LearningController {
     @ResponseMessage('Đã ghi nhận kết quả')
     submitWordReview(@Req() req: IAuthRequest, @Body() reviewDto: ReviewDto) {
         return this.learningService.review(req.user._id, reviewDto);
+    }
+
+    @Post(':id/unsuspend')
+    @ResponseMessage('Đã bỏ tạm dừng từ')
+    unsuspendWord(@Req() req: IAuthRequest, @Param('id', ParseIntPipe) id: number) {
+        return this.learningService.unsuspend(req.user._id, id);
     }
 }
