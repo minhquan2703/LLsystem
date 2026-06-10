@@ -1,5 +1,5 @@
-import { BookOutlined, FileTextOutlined, TagsOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Row } from 'antd';
+import { BookOutlined, FileTextOutlined, TagsOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Row, Tag } from 'antd';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
@@ -22,16 +22,23 @@ export default async function HomePage() {
             title: translate('feature_srs_title'),
             desc: translate('feature_srs_desc'),
         },
-    ]
+    ];
 
     const statList = [
         { value: '120 000+', label: translate('stat_words') },
         { value: 'HSK 1–9', label: translate('stat_hsk') },
         { value: '100%', label: translate('stat_free') },
-    ]
+    ];
+
+    const hskColors: Record<number, string> = {
+        1: 'green', 2: 'blue', 3: 'cyan',
+        4: 'purple', 5: 'orange', 6: 'red',
+        7: 'volcano', 8: 'volcano', 9: 'volcano',
+    };
 
     return (
         <main>
+            {/* hero */}
             <section style={{
                 textAlign: 'center',
                 padding: 'clamp(48px, 8vw, 88px) clamp(16px, 4vw, 48px) clamp(36px, 6vw, 64px)',
@@ -55,18 +62,26 @@ export default async function HomePage() {
                 }}>
                     {translate('hero_desc')}
                 </p>
-                <Link href="/auth/register">
-                    <Button type="primary" size="large">{translate('start_free')}</Button>
-                </Link>
+                <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <Link href="/words">
+                        <Button type="primary" size="large" icon={<ArrowRightOutlined />} iconPosition="end">
+                            {translate('explore_vocab')}
+                        </Button>
+                    </Link>
+                    <Link href="/auth/register">
+                        <Button size="large">{translate('start_free')}</Button>
+                    </Link>
+                </div>
             </section>
 
+            {/* stats */}
             <section style={{
                 padding: '0 clamp(16px, 4vw, 48px) 48px',
                 maxWidth: 720,
                 margin: '0 auto',
             }}>
                 <Row gutter={[24, 16]} justify="center">
-                    {statList.map(stat => (
+                    {statList.map((stat) => (
                         <Col key={stat.label} xs={8}>
                             <div style={{ textAlign: 'center' }}>
                                 <div style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 700, color: '#1677ff' }}>
@@ -81,13 +96,54 @@ export default async function HomePage() {
                 </Row>
             </section>
 
+            {/* vocab section */}
             <section style={{
-                padding: '0 clamp(16px, 4vw, 48px) clamp(48px, 8vw, 80px)',
+                background: '#f0f7ff',
+                padding: 'clamp(36px, 6vw, 64px) clamp(16px, 4vw, 48px)',
+            }}>
+                <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+                    <h2 style={{
+                        fontSize: 'clamp(20px, 3vw, 32px)',
+                        fontWeight: 700,
+                        color: '#111827',
+                        margin: '0 0 12px',
+                    }}>
+                        {translate('vocab_section_title')}
+                    </h2>
+                    <p style={{
+                        fontSize: 'clamp(13px, 1.6vw, 16px)',
+                        color: '#6b7280',
+                        maxWidth: 560,
+                        margin: '0 auto 28px',
+                        lineHeight: 1.75,
+                    }}>
+                        {translate('vocab_section_desc')}
+                    </p>
+
+                    <div style={{ marginBottom: 28, display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((level) => (
+                            <Tag key={level} color={hskColors[level]} style={{ fontSize: 13, padding: '3px 10px' }}>
+                                HSK {level}
+                            </Tag>
+                        ))}
+                    </div>
+
+                    <Link href="/words">
+                        <Button type="primary" size="large" icon={<ArrowRightOutlined />} iconPosition="end">
+                            {translate('vocab_section_cta')}
+                        </Button>
+                    </Link>
+                </div>
+            </section>
+
+            {/* features */}
+            <section style={{
+                padding: 'clamp(36px, 6vw, 64px) clamp(16px, 4vw, 48px) clamp(48px, 8vw, 80px)',
                 maxWidth: 960,
                 margin: '0 auto',
             }}>
                 <Row gutter={[24, 24]}>
-                    {featureList.map(feature => (
+                    {featureList.map((feature) => (
                         <Col key={feature.title} xs={24} md={8}>
                             <Card
                                 hoverable
@@ -107,5 +163,5 @@ export default async function HomePage() {
                 </Row>
             </section>
         </main>
-    )
+    );
 }

@@ -3,6 +3,7 @@ import { sendRequest } from '@/utils/api';
 import { Button, Card, Col, Row } from 'antd';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import HskLevelPicker from './hsk.level.picker';
 
 interface IProps {
     isAdmin: boolean;
@@ -20,7 +21,19 @@ export default async function UserDashboard({ isAdmin }: IProps) {
         },
     })
 
+    const userResponse = await sendRequest<IBackendRes<IUser>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${session?.user?._id}`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        nextOption: {
+            next: { tags: ['user-profile'] },
+        },
+    })
+
     const stats = statsResponse?.data ?? { total: 0, dueToday: 0 };
+    const hskLevel = userResponse?.data?.hskLevel ?? null;
 
     return (
         <main style={{
@@ -31,6 +44,8 @@ export default async function UserDashboard({ isAdmin }: IProps) {
             <h2 style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 700, marginBottom: 24 }}>
                 {translate('greeting')}, {session?.user?.name}
             </h2>
+
+            <HskLevelPicker currentLevel={hskLevel} />
 
             <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={8}>
@@ -59,17 +74,17 @@ export default async function UserDashboard({ isAdmin }: IProps) {
                     <Col xs={24} sm={12} md={8}>
                         <Card>
                             <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 8 }}>
-                                Quản trị hệ thống
+                                {translate('admin_panel_title')}
                             </div>
                             <Link href="/dashboard">
-                                <Button type="default" size="small">Vào admin panel</Button>
+                                <Button type="default" size="small">{translate('admin_panel_link')}</Button>
                             </Link>
                         </Card>
                     </Col>
                 )}
             </Row>
 
-            <div style={{ marginTop: 32 }}>
+            <div style={{ marginTop: 32, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                 {stats.dueToday > 0 ? (
                     <Link href="/learn">
                         <Button type="primary" size="large">
@@ -85,6 +100,12 @@ export default async function UserDashboard({ isAdmin }: IProps) {
                         {translate('start_learning')}
                     </span>
                 )}
+                <Link href="/quiz">
+                    <Button type="default" size="large">{translate('start_quiz')}</Button>
+                </Link>
+                <Link href="/words">
+                    <Button type="default" size="large">{translate('browse_words')}</Button>
+                </Link>
             </div>
         </main>
     )
