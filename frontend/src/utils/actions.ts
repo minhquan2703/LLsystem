@@ -74,6 +74,23 @@ export const handleUpdateUserAction = async (data: Partial<IUser> & { id: string
     return res;
 }
 
+export const handleUpdateHskLevelAction = async (hskLevel: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IUser>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`,
+        method: 'PATCH',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: {
+            id: session?.user?._id,
+            hskLevel,
+        },
+    })
+    revalidateTag('user-profile')
+    return res;
+}
+
 export const handleDeleteUserAction = async (id: string) => {
     const session = await auth();
     const res = await sendRequest<IBackendRes<unknown>>({
@@ -104,13 +121,46 @@ export const handleAddWordToLearningAction = async (wordId: number) => {
 
 export const handleSubmitWordReviewAction = async (userWordId: number, quality: number) => {
     const session = await auth();
-    const res = await sendRequest<IBackendRes<IUserWord>>({
+    const res = await sendRequest<IBackendRes<IReviewResult>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/learning/review`,
         method: 'POST',
         headers: {
             Authorization: `Bearer ${session?.user?.access_token}`,
         },
         body: { userWordId, quality },
+    })
+    return res;
+}
+
+export const handleUnsuspendWordAction = async (userWordId: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IUserWord>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/learning/${userWordId}/unsuspend`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+    })
+    return res;
+}
+
+export const handleSaveQuizAttemptAction = async (data: {
+    direction: QuizDirection;
+    language: QuizLanguage;
+    wordSource: QuizWordSource;
+    questionCount: number;
+    optionCount: number;
+    correctCount: number;
+    wrongWordIds?: number[];
+}) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IQuizAttempt>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/quiz/attempts`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: data,
     })
     return res;
 }

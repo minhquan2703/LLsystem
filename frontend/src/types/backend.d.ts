@@ -55,6 +55,7 @@ declare global {
         english: string;
         vietnamese: string;
         wordId: number;
+        partOfSpeechId?: number | null;
         createdAt: string;
     }
 
@@ -69,10 +70,13 @@ declare global {
         accountType: string;
         learnLang: string;
         transLang: string;
+        hskLevel: number | null;
         isActive: boolean;
         createdAt: string;
         updatedAt: string;
     }
+
+    type UserWordState = 'new' | 'learning' | 'review' | 'suspended';
 
     interface IUserWord {
         id: number;
@@ -84,18 +88,79 @@ declare global {
         interval: number;
         nextReview: string;
         lastReview: string | null;
+        lapseCount: number;
+        streak: number;
+        state: UserWordState;
         createdAt: string;
+    }
+
+    interface IReviewResult {
+        userWord: IUserWord;
+        againToday: boolean;
+        isLeech: boolean;
     }
 
     interface ILearningStats {
         total: number;
         dueToday: number;
+        newCount: number;
+        learningCount: number;
+        reviewCount: number;
+        suspendedCount: number;
     }
 
     interface ILearningDue {
         dueCount: number;
+        newCount: number;
+        learningCount: number;
+        reviewCount: number;
         total: number;
+        suspendedCount: number;
         words: IUserWord[];
+    }
+
+    type QuizDirection = 'zh-to-meaning' | 'meaning-to-zh';
+    type QuizLanguage = 'vi' | 'en';
+    type QuizWordSource = 'mine' | 'new' | 'mixed';
+
+    interface IQuizQuestion {
+        wordId: number;
+        promptText: string;
+        promptSub: string | null;
+        options: string[];
+        correctIndex: number;
+    }
+
+    interface IQuizGenerateResult {
+        questions: IQuizQuestion[];
+    }
+
+    interface IQuizAttempt {
+        id: number;
+        userId: string;
+        direction: QuizDirection;
+        language: QuizLanguage;
+        wordSource: QuizWordSource;
+        questionCount: number;
+        optionCount: number;
+        correctCount: number;
+        createdAt: string;
+    }
+
+    interface IQuizStats {
+        totalAttempts: number;
+        averageScore: number;
+        bestScore: number;
+        totalQuestionsAnswered: number;
+        totalCorrect: number;
+    }
+
+    interface IPartOfSpeech {
+        id: number;
+        code: string;
+        nameEn: string;
+        nameVi: string;
+        nameZh: string;
     }
 
     interface IWord {
@@ -107,8 +172,11 @@ declare global {
         englishDef: string | null;
         vietnameseDef: string | null;
         hskLevel: number | null;
-        partOfSpeech: string | null;
         frequency: number | null;
+        partOfSpeech?: string | null;
+        partsOfSpeech?: IPartOfSpeech[];
+        topics?: ITopic[];
+        examples?: IExample[];
         createdAt: string;
         updatedAt: string;
     }
