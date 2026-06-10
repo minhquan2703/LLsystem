@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Topic } from '@/modules/topics/entities/topic.entity';
 import { Example } from '@/modules/examples/entities/example.entity';
+import { PartOfSpeech } from '@/modules/words/entities/part-of-speech.entity';
 
 @Entity('words')
 export class Word {
@@ -42,7 +43,14 @@ export class Word {
   hskLevel: number; // 1-9
 
   @Column({ nullable: true })
-  partOfSpeech: string; // noun / verb / adjective...
+  partOfSpeech: string; //sẽ xóa sau khi chạy migrate-pos
+
+  @ManyToMany(() => PartOfSpeech, (pos) => pos.words)
+  @JoinTable({ name: 'word_parts_of_speech' })
+  partsOfSpeech: PartOfSpeech[];
+
+  @Column({ nullable: true })
+  radical: string; // bộ pháp — chỉ điền cho đơn tự (1 ký tự)
 
   @Column({ type: 'int', nullable: true })
   frequency: number; // thứ hạng tần suất

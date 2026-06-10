@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { TopicsService } from '@/modules/topics/topics.service';
 import { CreateTopicDto } from '@/modules/topics/dto/create-topic.dto';
 import { UpdateTopicDto } from '@/modules/topics/dto/update-topic.dto';
@@ -16,12 +17,14 @@ export class TopicsController {
 
   @Get()
   @Public()
+  @SkipThrottle()
   findAll() {
     return this.topicsService.findAll();
   }
 
   @Get(':id')
   @Public()
+  @SkipThrottle()
   findOne(@Param('id') id: string) {
     return this.topicsService.findOne(+id);
   }

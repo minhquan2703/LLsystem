@@ -26,7 +26,8 @@ export class CreateWordDto {
   hskLevel: number;
 
   @IsOptional()
-  partOfSpeech: string;
+  @IsArray({ message: 'partOfSpeechCodes phải là mảng' })
+  partOfSpeechCodes: string[];
 
   @IsOptional()
   @IsInt({ message: 'frequency phải là số nguyên' })

@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { WordsService } from '@/modules/words/words.service';
 import { CreateWordDto } from '@/modules/words/dto/create-word.dto';
 import { UpdateWordDto } from '@/modules/words/dto/update-word.dto';
@@ -16,17 +17,21 @@ export class WordsController {
 
   @Get()
   @Public()
+  @SkipThrottle()
   findAll(
     @Query('search') search: string,
     @Query('hskLevel') hskLevel: string,
+    @Query('topicId') topicId: string,
+    @Query('onlyHsk') onlyHsk: string,
     @Query('current') current: string,
     @Query('pageSize') pageSize: string,
   ) {
-    return this.wordsService.findAll(search, +hskLevel, +current, +pageSize);
+    return this.wordsService.findAll(search, +hskLevel, +topicId, onlyHsk === 'true', +current, +pageSize);
   }
 
   @Get(':id')
   @Public()
+  @SkipThrottle()
   findOne(@Param('id') id: string) {
     return this.wordsService.findOne(+id);
   }
