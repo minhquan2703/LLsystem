@@ -20,7 +20,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         return super.canActivate(context);
     }
 
-    handleRequest(err: Error, user: unknown) {
+    handleRequest<TUser = any>(err: Error, user: TUser): TUser {
         if (err || !user) {
             throw err || new UnauthorizedException('Access Token không hợp lệ hoặc không có tại header.');
         }

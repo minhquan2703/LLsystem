@@ -35,6 +35,9 @@ export class User {
   @Column({ default: 'vi' })
   transLang: string;
 
+  @Column({ type: 'int', nullable: true })
+  hskLevel: number | null;
+
   @Column({ default: false })
   isActive: boolean;
 
