@@ -14,6 +14,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TransformInterceptor } from '@/core/transform.interceptor';
 import { LearningModule } from '@/modules/learning/learning.module';
+import { PartsOfSpeechModule } from '@/modules/parts-of-speech/parts-of-speech.module';
+import { QuizModule } from '@/modules/quiz/quiz.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
@@ -24,6 +26,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     ExamplesModule,
     AuthModule,
     LearningModule,
+    PartsOfSpeechModule,
+    QuizModule,
     ThrottlerModule.forRoot([{
       ttl: 60000,
       limit: 10,
