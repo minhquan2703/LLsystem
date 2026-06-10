@@ -1,0 +1,265 @@
+.container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+}
+
+/* landing */
+.landingContainer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 16px 64px;
+}
+
+.landingTitle {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.landingSubtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.modeCard {
+    text-align: center;
+    border-radius: 16px;
+    height: 100%;
+}
+
+.modeCardDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.modeIcon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.modeTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.modeDesc {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* custom config form */
+.configCard {
+    border-radius: 16px;
+    margin-top: 8px;
+}
+
+.configLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.configHint {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.statsSummaryCard {
+    border-radius: 16px;
+    margin-top: 24px;
+}
+
+/* timer */
+.timerLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.timerLabelUrgent {
+    color: #ef4444;
+}
+
+.timeUpLabel {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ef4444;
+    margin-bottom: 4px;
+}
+
+/* top bar */
+.quizTopBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.quizProgressLabel {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.quizScoreLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.scoreIcon {
+    color: #16a34a;
+}
+
+/* question card */
+.questionCard {
+    text-align: center;
+    margin-bottom: 24px;
+    border-radius: 16px;
+}
+
+.wordChinese {
+    font-size: clamp(52px, 10vw, 72px);
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+
+.wordPinyin {
+    font-size: 20px;
+    color: #1677ff;
+    font-style: italic;
+}
+
+/* prompt khi hướng nghĩa -> hán: text nghĩa dài nên cỡ chữ nhỏ hơn hán tự */
+.promptMeaning {
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.35;
+}
+
+/* option là hán tự thì để cỡ chữ to hơn nghĩa */
+.optionZh {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* options */
+.optionsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.optionButton {
+    padding: 16px 12px;
+    border: 2px solid #e8e8e8;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    min-height: 64px;
+    line-height: 1.4;
+}
+
+.optionButton:hover:not(:disabled) {
+    border-color: #1677ff;
+    background: #f0f7ff;
+    color: #1677ff;
+}
+
+.optionButton:disabled {
+    cursor: not-allowed;
+}
+
+.optionCorrect {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.optionWrong {
+    border-color: #ef4444;
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.optionIcon {
+    flex-shrink: 0;
+}
+
+/* feedback */
+.feedbackRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.feedbackCorrect {
+    font-size: 18px;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.feedbackWrong {
+    font-size: 15px;
+    color: #6b7280;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* result screen */
+.resultCard {
+    text-align: center;
+    border-radius: 16px;
+    padding: 8px;
+}
+
+.resultIcon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.trophyGold {
+    color: #f59e0b;
+}
+
+.trophyGray {
+    color: #9ca3af;
+}
+
+.resultTitle {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.resultScore {
+    font-size: 16px;
+    color: #6b7280;
+}

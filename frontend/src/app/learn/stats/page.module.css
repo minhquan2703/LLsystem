@@ -1,0 +1,142 @@
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+}
+
+.pageTitle {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 24px;
+}
+
+/* mastery breakdown */
+.masterList {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.masterRow {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.masterLabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #555;
+}
+
+/* activity heatmap */
+.activityGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.activityCell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+}
+
+.activityLegend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.legendCell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* hsk breakdown */
+.hskList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hskRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hskBarWrapper {
+    flex: 1;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.hskBar {
+    height: 100%;
+    border-radius: 4px;
+    min-width: 2px;
+}
+
+.hskCount {
+    font-size: 12px;
+    color: #9ca3af;
+    min-width: 64px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* weekly chart */
+.weeklyChart {
+    display: flex;
+    gap: 6px;
+    height: 120px;
+}
+
+.weeklyCol {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+}
+
+.weeklyCount {
+    font-size: 11px;
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+.weeklyBarWrapper {
+    flex: 1;
+    width: 100%;
+    background: #f0f0f0;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.weeklyBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1677ff;
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+}
+
+.weeklyDay {
+    font-size: 11px;
+    color: #9ca3af;
+    flex-shrink: 0;
+}

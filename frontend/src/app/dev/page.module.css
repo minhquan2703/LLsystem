@@ -1,0 +1,80 @@
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+}
+
+.pageTitle {
+    font-size: clamp(24px, 4.5vw, 34px);
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 8px;
+}
+
+.pageIntro {
+    color: #6b7280;
+    margin-bottom: 28px;
+    max-width: 720px;
+}
+
+.inlineCode {
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 12px;
+    color: #db2777;
+}
+
+.card {
+    height: 100%;
+}
+
+.cardTitle {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.cardTitleText {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+    padding-top: 2px;
+}
+
+.categoryTag {
+    flex-shrink: 0;
+    margin-inline-end: 0;
+    margin-top: 2px;
+}
+
+.collapseLabel {
+    color: #478eff;
+    text-decoration: underline;
+}
+
+.filePath {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    color: #6b7280;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.summary {
+    color: #374151;
+    margin-bottom: 4px !important;
+}
+
+.explanation {
+    white-space: pre-wrap;
+    color: #374151;
+}
+
+.emptyExplanation {
+    margin: 12px 0 0;
+}

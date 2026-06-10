@@ -1,0 +1,32 @@
+.card {
+    margin-bottom: 24px;
+    border: 1px solid #bfdbfe;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.label {
+    font-size: clamp(15px, 2.2vw, 17px);
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.levelRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.levelTag {
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+}
+
+.levelTagActive {
+    border-color: #1677ff;
+    font-weight: 700;
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.15);
+}
