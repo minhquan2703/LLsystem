@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '@/modules/users/dto/create-user.dto';
 import { UpdateUserDto } from '@/modules/users/dto/update-user.dto';
 import { User } from '@/modules/users/entities/user.entity';
-import { hashPasswordHelper } from '@/helpers/util';
+import { comparePasswordHelper, hashPasswordHelper } from '@/helpers/util';
 import { ChangePasswordAuthDto, CodeAuthDto, CreateAuthDto } from '@/auth/dto/create-auth.dto';
 import { AppErrorCode } from '@/common/errors.enum';
 import { v4 as uuidv4 } from 'uuid';
@@ -119,9 +119,9 @@ export class UsersService {
         });
         await this.usersRepo.save(newUser);
 
-        this.mailerService.sendMail({
+        await this.mailerService.sendMail({
             to: newUser.email,
-            subject: 'Activate your account at @hoidanit',
+            subject: 'Activate your LLsystem account',
             template: 'register',
             context: { name: newUser.name ?? newUser.email, activationCode },
         });
@@ -157,9 +157,9 @@ export class UsersService {
             codeExpired: dayjs().add(5, 'minutes').toDate(),
         });
 
-        this.mailerService.sendMail({
+        await this.mailerService.sendMail({
             to: user.email,
-            subject: 'Activate your account at @hoidanit',
+            subject: 'Activate your LLsystem account',
             template: 'register',
             context: { name: user.name ?? user.email, activationCode: newActivationCode },
         });
@@ -179,14 +179,34 @@ export class UsersService {
             codeExpired: dayjs().add(5, 'minutes').toDate(),
         });
 
-        this.mailerService.sendMail({
+        await this.mailerService.sendMail({
             to: user.email,
-            subject: 'Change your password account at @hoidanit',
-            template: 'register',
+            subject: 'Reset your LLsystem password',
+            template: 'reset-password',
             context: { name: user.name ?? user.email, activationCode: newActivationCode },
         });
 
         return { id: user.id, email: user.email };
+    }
+
+    updateRefreshToken = async (userId: string, hashedToken: string | null) => {
+        await this.usersRepo.update(userId, { refreshToken: hashedToken });
+    }
+
+    validateRefreshToken = async (userId: string, refreshToken: string) => {
+        const user = await this.usersRepo
+            .createQueryBuilder('user')
+            .addSelect('user.refreshToken')
+            .where('user.id = :id', { id: userId })
+            .getOne();
+        if (!user || !user.isActive || !user.refreshToken) {
+            throw new UnauthorizedException(AppErrorCode.INVALID_REFRESH_TOKEN);
+        }
+        const isTokenValid = await comparePasswordHelper(refreshToken, user.refreshToken);
+        if (!isTokenValid) {
+            throw new UnauthorizedException(AppErrorCode.INVALID_REFRESH_TOKEN);
+        }
+        return user;
     }
 
     async changePassword(data: ChangePasswordAuthDto) {

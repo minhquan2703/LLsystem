@@ -41,6 +41,9 @@ export class User {
   @Column({ default: false })
   isActive: boolean;
 
+  @Column({ nullable: true, select: false })
+  refreshToken: string | null;
+
   @Column({ nullable: true })
   codeId: string;
 
