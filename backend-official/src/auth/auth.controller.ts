@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common'
 import { Request as ExpressRequest } from 'express';
 import { AuthService } from '@/auth/auth.service';
 import { LocalAuthGuard } from '@/auth/passport/local-auth.guard';
+import { JwtRefreshAuthGuard } from '@/auth/passport/jwt-refresh-auth.guard';
 import { Public, ResponseMessage } from '@/decorator/customize';
 import { ChangePasswordAuthDto, CodeAuthDto, CreateAuthDto } from '@/auth/dto/create-auth.dto';
 import { User } from '@/modules/users/entities/user.entity';
@@ -12,6 +13,10 @@ interface ILocalAuthRequest extends ExpressRequest {
 
 interface IJwtAuthRequest extends ExpressRequest {
     user: { _id: string; username: string }
+}
+
+interface IRefreshRequest extends ExpressRequest {
+    user: User
 }
 
 @Controller('auth')
@@ -56,6 +61,20 @@ export class AuthController {
     @Public()
     changePassword(@Body() changePasswordDto: ChangePasswordAuthDto) {
         return this.authService.changePassword(changePasswordDto);
+    }
+
+    @Post('refresh')
+    @Public()
+    @UseGuards(JwtRefreshAuthGuard)
+    @ResponseMessage('Refresh token thành công')
+    refreshTokens(@Request() req: IRefreshRequest) {
+        return this.authService.refreshTokens(req.user);
+    }
+
+    @Post('logout')
+    @ResponseMessage('Logout thành công')
+    logout(@Request() req: IJwtAuthRequest) {
+        return this.authService.logout(req.user._id);
     }
 
     @Get('profile')
