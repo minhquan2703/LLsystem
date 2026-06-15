@@ -6,7 +6,7 @@ import { Card, Col, Empty, Row, Statistic } from 'antd';
 import { CheckCircleOutlined, FireOutlined, TrophyOutlined } from '@ant-design/icons';
 import HeaderHome from '@/components/layout/header.home';
 import QuizHistoryTable from './quiz.history.table';
-import styles from '../page.module.css';
+import styles from '@/app/quiz/page.module.css';
 
 export default async function QuizHistoryPage() {
     const [session, translate] = await Promise.all([

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Col, Radio, Row, Segmented, Select, Slider, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
-import styles from '../page.module.css';
+import styles from '@/app/quiz/page.module.css';
 
 const HSK_LEVEL_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((level) => ({ value: level, label: `HSK ${level}` }));
 const TIMER_SECONDS = 15;

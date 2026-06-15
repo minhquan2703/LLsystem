@@ -1,12 +1,29 @@
 import { auth, signOut } from '@/auth';
+import { sendRequest } from '@/utils/api';
 import { Button, Space } from 'antd';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import AccountSettings from './account.settings';
 import LocaleSwitcher from './locale.switcher';
 
 export default async function HeaderHome() {
     const session = await auth();
     const translate = await getTranslations('nav');
+
+    let userProfile: IUser | null = null;
+    if (session?.user?._id) {
+        const res = await sendRequest<IBackendRes<IUser>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${session.user._id}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${session.user.access_token}`,
+            },
+            nextOption: {
+                next: { tags: ['user-profile'] },
+            },
+        });
+        userProfile = res?.data ?? null;
+    }
 
     return (
         <header style={{
@@ -33,9 +50,12 @@ export default async function HeaderHome() {
                                 <Button size="small">{translate('dashboard')}</Button>
                             </Link>
                         )}
-                        <Link href="/learn">
-                            <Button size="small" type="primary">{translate('learn')}</Button>
-                        </Link>
+                        <AccountSettings
+                            userId={session.user._id}
+                            initialName={userProfile?.name ?? session.user.name ?? ''}
+                            initialLearnLang={userProfile?.learnLang ?? 'zh'}
+                            initialTransLang={userProfile?.transLang ?? 'vi'}
+                        />
                         <form action={async () => {
                             'use server'
                             await signOut({ redirectTo: '/' })

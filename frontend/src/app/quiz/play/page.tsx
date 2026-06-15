@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { sendRequest } from '@/utils/api';
 import HeaderHome from '@/components/layout/header.home';
-import QuizRunner from '../quiz.runner';
+import QuizRunner from '@/app/quiz/quiz.runner';
 
 interface Props {
     searchParams: Promise<{

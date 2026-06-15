@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": {
-    "url": "https://hoidanit.vn",
-    "name": "Hỏi Dân IT"
+    "name": "LLsystem"
   },
   "private": true,
   "license": "UNLICENSED",
@@ -21,6 +20,7 @@
     "fill:viet": "ts-node -r tsconfig-paths/register src/scripts/fill-vietnamese-def.ts",
     "fill:hsk": "ts-node -r tsconfig-paths/register src/scripts/fill-hsk-level.ts",
     "seed:topics": "ts-node -r tsconfig-paths/register src/scripts/seed-topics.ts",
+    "seed:speaking": "ts-node -r tsconfig-paths/register src/scripts/seed-speaking-questions.ts",
     "fill:topics": "ts-node -r tsconfig-paths/register src/scripts/fill-topics.ts",
     "cleanup:topic": "ts-node -r tsconfig-paths/register src/scripts/cleanup-topic.ts",
     "enrich:gemini": "ts-node -r tsconfig-paths/register src/scripts/enrich-words-gemini.ts",
@@ -47,6 +47,7 @@
     "@nestjs/platform-express": "10.3.10",
     "@nestjs/throttler": "^6.5.0",
     "@nestjs/typeorm": "^11.0.1",
+    "@supabase/supabase-js": "^2.108.1",
     "api-query-params": "5.4.0",
     "bcrypt": "5.1.1",
     "class-transformer": "0.5.1",
@@ -104,6 +105,9 @@
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       ".+\\.(t|j)s$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
