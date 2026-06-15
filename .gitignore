@@ -1,11 +1,11 @@
-# Claude Code local settings
-.claude/settings.local.json
-.mcp.json
-
 # Dictionary data files (large, not source code)
 *.u8
 cedict_*.txt
 CVDICT-*/
+complete.json
+
+# Script checkpoints (runtime state, not source)
+*-checkpoint.json
 
 # OS
 .DS_Store
