@@ -16,6 +16,9 @@ import { TransformInterceptor } from '@/core/transform.interceptor';
 import { LearningModule } from '@/modules/learning/learning.module';
 import { PartsOfSpeechModule } from '@/modules/parts-of-speech/parts-of-speech.module';
 import { QuizModule } from '@/modules/quiz/quiz.module';
+import { SpeakingModule } from '@/modules/speaking/speaking.module';
+import { GeminiModule } from '@/modules/gemini/gemini.module';
+import { StorageModule } from '@/modules/storage/storage.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
@@ -28,6 +31,9 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     LearningModule,
     PartsOfSpeechModule,
     QuizModule,
+    SpeakingModule,
+    GeminiModule,
+    StorageModule,
     ThrottlerModule.forRoot([{
       ttl: 60000,
       limit: 10,

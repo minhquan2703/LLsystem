@@ -71,6 +71,7 @@ export const handleUpdateUserAction = async (data: Partial<IUser> & { id: string
         body: { ...data },
     })
     revalidateTag('list-users')
+    revalidateTag('user-profile')
     return res;
 }
 
@@ -162,6 +163,44 @@ export const handleSaveQuizAttemptAction = async (data: {
         },
         body: data,
     })
+    return res;
+}
+
+// ── Speaking ─────────────────────────────────────────────────────────────────
+
+export const handleSubmitSpeakingAttemptAction = async (data: {
+    questionId: number;
+    audioBase64: string;
+    mimeType: string;
+    durationSeconds: number;
+    pauseCount: number;
+    totalPauseSeconds: number;
+    longPauseCount: number;
+    speechRatio?: number;
+}) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<ISpeakingAttempt>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/speaking/attempts`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: data,
+    })
+    revalidateTag('speaking-attempts')
+    return res;
+}
+
+export const handleDeleteSpeakingAttemptAction = async (id: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<{ id: number }>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/speaking/attempts/${id}`,
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+    })
+    revalidateTag('speaking-attempts')
     return res;
 }
 

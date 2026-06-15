@@ -103,6 +103,9 @@ export default async function UserDashboard({ isAdmin }: IProps) {
                 <Link href="/quiz">
                     <Button type="default" size="large">{translate('start_quiz')}</Button>
                 </Link>
+                <Link href="/speaking">
+                    <Button type="default" size="large">{translate('start_speaking')}</Button>
+                </Link>
                 <Link href="/words">
                     <Button type="default" size="large">{translate('browse_words')}</Button>
                 </Link>

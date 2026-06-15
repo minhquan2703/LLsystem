@@ -37,6 +37,7 @@ declare global {
             role: string;
         }
         access_token: string;
+        refresh_token: string;
     }
 
     interface ITopic {
@@ -179,6 +180,67 @@ declare global {
         examples?: IExample[];
         createdAt: string;
         updatedAt: string;
+    }
+
+    type SpeakingPart = 1 | 2 | 3;
+
+    interface ISpeakingQuestion {
+        id: number;
+        part: SpeakingPart;
+        topic: string;
+        questionText: string;
+        cueCardPoints: string[] | null;
+        language: string;
+        orderIndex: number;
+        createdAt: string;
+    }
+
+    interface ISpeakingCorrection {
+        quote: string;
+        issue: string;
+        suggestion: string;
+    }
+
+    interface ISpeakingVocabSuggestion {
+        original: string;
+        better: string;
+    }
+
+    interface ISpeakingFeedback {
+        corrections: ISpeakingCorrection[];
+        vocabularySuggestions: ISpeakingVocabSuggestion[];
+        pronunciationNotes: string[];
+        strengths: string[];
+        improvements: string[];
+        modelAnswer: string;
+    }
+
+    interface ISpeakingMetrics {
+        wordCount: number;
+        wordsPerMinute: number;
+        fillerWordCount: number;
+        fillerWords: Record<string, number>;
+        pauseCount: number;
+        totalPauseSeconds: number;
+        longPauseCount: number;
+    }
+
+    interface ISpeakingAttempt {
+        id: number;
+        userId: string;
+        questionId: number;
+        question: ISpeakingQuestion;
+        durationSeconds: number;
+        transcript: string;
+        audioUrl: string | null;
+        bandFluency: number;
+        bandLexical: number;
+        bandGrammar: number;
+        bandPronunciation: number;
+        bandOverall: number;
+        feedback: ISpeakingFeedback;
+        metrics: ISpeakingMetrics;
+        createdAt: string;
     }
 
 }

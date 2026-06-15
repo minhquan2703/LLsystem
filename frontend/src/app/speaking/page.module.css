@@ -1,0 +1,146 @@
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+.title {
+    font-size: clamp(28px, 5vw, 48px);
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.topicHeading {
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.questionText {
+    font-size: clamp(18px, 3vw, 24px);
+    margin: 4px 0 8px;
+}
+
+.cueCard {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+.cueCard ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+}
+
+.hint {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 0;
+}
+
+.centerCard {
+    text-align: center;
+}
+
+.prepLabel {
+    color: #6b7280;
+}
+
+.prepCountdown {
+    font-size: clamp(40px, 8vw, 64px);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin: 8px 0 16px;
+}
+
+.recordingRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.recordDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #dc2626;
+    animation: recordPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes recordPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}
+
+.timerText {
+    font-size: clamp(32px, 6vw, 48px);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin: 8px 0 16px;
+}
+
+.audioPlayer {
+    width: 100%;
+    max-width: 480px;
+}
+
+.overallCard {
+    text-align: center;
+}
+
+.metricSuffix {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.transcript {
+    font-style: italic;
+    color: #374151;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.correctionQuote {
+    color: #dc2626;
+}
+
+.correctionIssue {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.modelAnswer {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.historyRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.historyQuestion {
+    flex: 1;
+    min-width: 200px;
+}
+
+.historyDate {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.historyAudio {
+    width: 100%;
+    max-width: 280px;
+    height: 32px;
+}
