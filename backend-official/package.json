@@ -21,6 +21,7 @@
     "fill:hsk": "ts-node -r tsconfig-paths/register src/scripts/fill-hsk-level.ts",
     "seed:topics": "ts-node -r tsconfig-paths/register src/scripts/seed-topics.ts",
     "seed:speaking": "ts-node -r tsconfig-paths/register src/scripts/seed-speaking-questions.ts",
+    "seed:english-words": "ts-node -r tsconfig-paths/register src/scripts/seed-english-words.ts",
     "fill:topics": "ts-node -r tsconfig-paths/register src/scripts/fill-topics.ts",
     "cleanup:topic": "ts-node -r tsconfig-paths/register src/scripts/cleanup-topic.ts",
     "enrich:gemini": "ts-node -r tsconfig-paths/register src/scripts/enrich-words-gemini.ts",

@@ -19,6 +19,8 @@ import { QuizModule } from '@/modules/quiz/quiz.module';
 import { SpeakingModule } from '@/modules/speaking/speaking.module';
 import { GeminiModule } from '@/modules/gemini/gemini.module';
 import { StorageModule } from '@/modules/storage/storage.module';
+import { EnglishWordsModule } from '@/modules/english-words/english-words.module';
+import { VocabPracticeModule } from '@/modules/vocab-practice/vocab-practice.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
@@ -34,6 +36,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     SpeakingModule,
     GeminiModule,
     StorageModule,
+    EnglishWordsModule,
+    VocabPracticeModule,
     ThrottlerModule.forRoot([{
       ttl: 60000,
       limit: 10,
