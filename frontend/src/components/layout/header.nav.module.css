@@ -1,0 +1,30 @@
+@media (min-width: 768px) {
+    .mobileNav {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .desktopNav {
+        display: none !important;
+    }
+}
+
+.drawerContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.drawerGreeting {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+    padding: 4px 0;
+}
+
+.drawerDivider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 4px 0;
+}

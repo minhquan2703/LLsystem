@@ -110,6 +110,22 @@
     margin-bottom: 16px;
 }
 
+@media (max-width: 575px) {
+    .sessionActions {
+        position: sticky;
+        bottom: 0;
+        background: #fff;
+        padding: 12px 0;
+        border-top: 1px solid #f0f0f0;
+        z-index: 10;
+        justify-content: stretch;
+    }
+
+    .sessionActions > * {
+        flex: 1;
+    }
+}
+
 .senseNav {
     display: flex;
     justify-content: center;

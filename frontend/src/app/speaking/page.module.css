@@ -144,3 +144,20 @@
     max-width: 280px;
     height: 32px;
 }
+
+@media (max-width: 575px) {
+    .historyRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .historyQuestion {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .historyAudio {
+        max-width: 100%;
+    }
+}

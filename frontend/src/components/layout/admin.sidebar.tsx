@@ -17,7 +17,7 @@ type MenuItem = Required<MenuProps>['items'][number]
 
 const AdminSideBar = () => {
     const { Sider } = Layout
-    const { collapseMenu } = useContext(AdminContext)!
+    const { collapseMenu, setCollapseMenu } = useContext(AdminContext)!
 
     const items: MenuItem[] = [
         {
@@ -55,7 +55,16 @@ const AdminSideBar = () => {
     ]
 
     return (
-        <Sider collapsed={collapseMenu}>
+        <Sider
+            collapsed={collapseMenu}
+            breakpoint="md"
+            collapsedWidth={0}
+            onBreakpoint={(broken) => {
+                if (broken) {
+                    setCollapseMenu(true);
+                }
+            }}
+        >
             <Menu
                 mode="inline"
                 defaultSelectedKeys={['dashboard']}

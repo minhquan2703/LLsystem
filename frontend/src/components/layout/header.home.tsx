@@ -1,14 +1,10 @@
-import { auth, signOut } from '@/auth';
+import { auth } from '@/auth';
 import { sendRequest } from '@/utils/api';
-import { Button, Space } from 'antd';
-import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
-import AccountSettings from './account.settings';
-import LocaleSwitcher from './locale.switcher';
+import HeaderNavClient from './header.nav.client';
 
 export default async function HeaderHome() {
     const session = await auth();
-    const translate = await getTranslations('nav');
 
     let userProfile: IUser | null = null;
     if (session?.user?._id) {
@@ -32,51 +28,19 @@ export default async function HeaderHome() {
             alignItems: 'center',
             padding: '12px 24px',
             borderBottom: '1px solid #f0f0f0',
-            flexWrap: 'wrap',
-            gap: 8,
         }}>
             <Link href="/" style={{ fontWeight: 600, fontSize: 18, color: '#111827', textDecoration: 'none' }}>
                 LLsystem
             </Link>
-            <Space wrap>
-                <LocaleSwitcher />
-                {session ? (
-                    <>
-                        <span style={{ fontSize: 13, color: '#6b7280' }}>
-                            {translate('greeting')}, {session.user?.name}
-                        </span>
-                        <Link href="/vocab-practice">
-                            <Button size="small">Vocab</Button>
-                        </Link>
-                        {session.user?.role === 'ADMIN' && (
-                            <Link href="/dashboard">
-                                <Button size="small">{translate('dashboard')}</Button>
-                            </Link>
-                        )}
-                        <AccountSettings
-                            userId={session.user._id}
-                            initialName={userProfile?.name ?? session.user.name ?? ''}
-                            initialLearnLang={userProfile?.learnLang ?? 'zh'}
-                            initialTransLang={userProfile?.transLang ?? 'vi'}
-                        />
-                        <form action={async () => {
-                            'use server'
-                            await signOut({ redirectTo: '/' })
-                        }}>
-                            <Button htmlType="submit" size="small">{translate('logout')}</Button>
-                        </form>
-                    </>
-                ) : (
-                    <>
-                        <Link href="/auth/login">
-                            <Button size="small">{translate('login')}</Button>
-                        </Link>
-                        <Link href="/auth/register">
-                            <Button size="small" type="primary">{translate('register')}</Button>
-                        </Link>
-                    </>
-                )}
-            </Space>
+            <HeaderNavClient
+                isLoggedIn={!!session}
+                userName={session?.user?.name ?? ''}
+                userRole={session?.user?.role ?? ''}
+                userId={session?.user?._id ?? ''}
+                initialName={userProfile?.name ?? session?.user?.name ?? ''}
+                initialLearnLang={userProfile?.learnLang ?? 'zh'}
+                initialTransLang={userProfile?.transLang ?? 'vi'}
+            />
         </header>
-    )
+    );
 }
