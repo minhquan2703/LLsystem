@@ -45,6 +45,9 @@ export default async function HeaderHome() {
                         <span style={{ fontSize: 13, color: '#6b7280' }}>
                             {translate('greeting')}, {session.user?.name}
                         </span>
+                        <Link href="/vocab-practice">
+                            <Button size="small">Vocab</Button>
+                        </Link>
                         {session.user?.role === 'ADMIN' && (
                             <Link href="/dashboard">
                                 <Button size="small">{translate('dashboard')}</Button>
