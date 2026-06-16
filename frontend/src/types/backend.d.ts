@@ -243,4 +243,122 @@ declare global {
         createdAt: string;
     }
 
+    // ── Vocab Practice ────────────────────────────────────────────────────────────
+
+    type SenseTier = 'obvious' | 'academic';
+    type PracticeMode = 'topic' | 'context';
+    type SenseProgressState = 'new' | 'learning' | 'review' | 'suspended';
+
+    interface IEnglishWord {
+        id: number;
+        lemma: string;
+        level: string | null;
+        frequency: number;
+        senses?: IEnglishWordSense[];
+    }
+
+    interface IEnglishWordSense {
+        id: number;
+        wordId: number;
+        word?: IEnglishWord;
+        pos: string | null;
+        glossEn: string;
+        glossVi: string | null;
+        synonyms: string[];
+        contextTags: string[];
+        tier: SenseTier;
+        exampleEn: string | null;
+    }
+
+    interface IUserSenseProgress {
+        id: number;
+        userId: string;
+        senseId: number;
+        sense: IEnglishWordSense;
+        repetitions: number;
+        easeFactor: number;
+        interval: number;
+        nextReview: string;
+        lastReview: string | null;
+        lapseCount: number;
+        streak: number;
+        state: SenseProgressState;
+        createdAt: string;
+    }
+
+    interface IVocabPracticeRun {
+        id: number;
+        userId: string;
+        mode: PracticeMode;
+        targetTopic: string | null;
+        sessionCount: number;
+        completedSessions: number;
+        completedAt: string | null;
+        createdAt: string;
+    }
+
+    interface IVocabSession {
+        id: number;
+        runId: number;
+        userId: string;
+        sessionIndex: number;
+        senseIds: number[];
+        draftAnswers: { senseId: number; synonymsInput: string[]; exampleInput: string }[] | null;
+        currentSenseIndex: number;
+        geminiNote: string | null;
+        isCompleted: boolean;
+        completedAt: string | null;
+        createdAt: string;
+    }
+
+    interface IVocabExampleFeedback {
+        isGrammaticallyCorrect: boolean;
+        usesSenseCorrectly: boolean;
+        improvement: string;
+    }
+
+    interface IVocabAttempt {
+        id: number;
+        sessionId: number;
+        senseId: number;
+        sense: IEnglishWordSense;
+        synonymsInput: string[];
+        synonymScore: number | null;
+        exampleInput: string | null;
+        exampleBand: number | null;
+        exampleFeedback: IVocabExampleFeedback | null;
+        resolved: boolean;
+        createdAt: string;
+    }
+
+    interface IActiveRunResponse {
+        run: IVocabPracticeRun;
+        session: IVocabSession;
+        senses: IEnglishWordSense[];
+    }
+
+    interface ISubmitSessionResponse {
+        nextSessionId: number | null;
+        nextSenses: IEnglishWordSense[] | null;
+        runComplete: boolean;
+    }
+
+    interface ISessionResultResponse {
+        session: IVocabSession;
+        senses: IEnglishWordSense[];
+        attempts: IVocabAttempt[];
+    }
+
+    interface IStartRunResponse {
+        run: IVocabPracticeRun;
+        session: IVocabSession;
+        senses: IEnglishWordSense[];
+    }
+
+    interface IRunHistoryItem {
+        run: IVocabPracticeRun;
+        sessions: IVocabSession[];
+        hasResumableSessions: boolean;
+    }
+
 }

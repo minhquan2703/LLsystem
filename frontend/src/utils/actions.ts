@@ -204,6 +204,90 @@ export const handleDeleteSpeakingAttemptAction = async (id: number) => {
     return res;
 }
 
+// ── Vocab Practice ────────────────────────────────────────────────────────────
+
+export const handleStartVocabRunAction = async (data: {
+    mode?: PracticeMode;
+    targetTopic?: string;
+    sessionCount?: number;
+}) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<IStartRunResponse>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vocab-practice/runs`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: data,
+    })
+    return res;
+}
+
+export const handleFinishVocabRunEarlyAction = async () => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<null>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vocab-practice/runs/finish`,
+        method: 'PATCH',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+    });
+    revalidateTag('vocab-history');
+    return res;
+};
+
+export const handleResumeRunAction = async (runId: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<null>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vocab-practice/runs/${runId}/resume`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+    });
+    revalidateTag('vocab-history');
+    return res;
+};
+
+export const handleSaveDraftAction = async (
+    sessionId: number,
+    answers: Array<{ senseId: number; synonymsInput: string[]; exampleInput: string }>,
+    currentSenseIndex: number,
+) => {
+    const session = await auth();
+    await sendRequest<IBackendRes<null>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vocab-practice/sessions/${sessionId}/draft`,
+        method: 'PATCH',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: {
+            answers,
+            currentSenseIndex,
+        },
+    });
+};
+
+export const handleSubmitVocabSessionAction = async (
+    sessionId: number,
+    attempts: Array<{
+        senseId: number;
+        synonymsInput: string[];
+        exampleInput?: string;
+    }>,
+) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<ISubmitSessionResponse>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vocab-practice/sessions/${sessionId}/submit`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+        body: { attempts },
+    })
+    return res;
+}
+
 // ── Topics ──────────────────────────────────────────────────────────────────
 
 export const handleCreateTopicAction = async (data: Omit<ITopic, 'id' | 'createdAt' | 'updatedAt'>) => {
