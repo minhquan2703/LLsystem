@@ -1,7 +1,9 @@
 'use client';
-import { Button, Card, Col, Collapse, List, Row, Space, Statistic, Tag } from 'antd';
-import { RedoOutlined, UnorderedListOutlined, CheckCircleOutlined, RiseOutlined } from '@ant-design/icons';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Card, Col, Collapse, List, Row, Space, Spin, Statistic, Tag, Typography } from 'antd';
+import { RedoOutlined, UnorderedListOutlined, CheckCircleOutlined, RiseOutlined, SoundOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
+import { handleGetSpeakingAttemptAction } from '@/utils/actions';
 import styles from './page.module.css';
 
 export function bandColor(band: number): string {
@@ -26,6 +28,28 @@ interface Props {
 export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
     const translate = useTranslations('speaking');
     const { feedback, metrics } = attempt;
+    const [liveAttempt, setLiveAttempt] = useState(attempt);
+    const pollCountRef = useRef(0);
+
+    //poll mỗi 3s tối đa 20 lần (60s) cho đến khi prosodyStatus = done | failed
+    useEffect(() => {
+        if (liveAttempt.prosodyStatus === 'done' || liveAttempt.prosodyStatus === 'failed') {
+            return;
+        }
+        pollCountRef.current = 0;
+        const intervalId = setInterval(async () => {
+            pollCountRef.current += 1;
+            if (pollCountRef.current >= 20) {
+                clearInterval(intervalId);
+                return;
+            }
+            const res = await handleGetSpeakingAttemptAction(liveAttempt.id);
+            if (res?.data) {
+                setLiveAttempt(res.data);
+            }
+        }, 3000);
+        return () => clearInterval(intervalId);
+    }, [liveAttempt.prosodyStatus, liveAttempt.id]);
 
     const criteria = [
         { title: translate('result_fluency'), value: attempt.bandFluency },
@@ -168,6 +192,64 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
                     }]}
                 />
             )}
+
+            <Card
+                title={<span><SoundOutlined style={{ marginRight: 8 }} />{translate('prosody_title')}</span>}
+                size="small"
+                style={{ marginTop: 12 }}
+            >
+                {(liveAttempt.prosodyStatus === 'pending' || liveAttempt.prosodyStatus === 'processing') && (
+                    <Space>
+                        <Spin size="small" />
+                        <Typography.Text type="secondary">{translate('prosody_analyzing')}</Typography.Text>
+                    </Space>
+                )}
+                {liveAttempt.prosodyStatus === 'failed' && (
+                    <Typography.Text type="secondary">{translate('prosody_failed')}</Typography.Text>
+                )}
+                {liveAttempt.prosodyStatus === 'done' && liveAttempt.prosody?.intonation && (
+                    <Row gutter={[12, 12]}>
+                        <Col xs={12} md={6}>
+                            <Statistic
+                                title={translate('prosody_pitch_range')}
+                                value={liveAttempt.prosody.intonation.pitchRangeSemitones}
+                                precision={1}
+                                suffix="st"
+                            />
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <Statistic
+                                title={translate('prosody_f0_std')}
+                                value={liveAttempt.prosody.intonation.f0Std}
+                                precision={1}
+                                suffix="Hz"
+                            />
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <Statistic
+                                title={translate('prosody_voiced_ratio')}
+                                value={Math.round(liveAttempt.prosody.intonation.voicedRatio * 100)}
+                                suffix="%"
+                            />
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <div>
+                                <div style={{ color: '#6b7280', fontSize: 14, marginBottom: 4 }}>{translate('prosody_terminal_tone')}</div>
+                                <Tag color={liveAttempt.prosody.intonation.terminalTone === 'falling' ? 'blue' : liveAttempt.prosody.intonation.terminalTone === 'rising' ? 'orange' : 'default'}>
+                                    {liveAttempt.prosody.intonation.terminalTone === 'falling'
+                                        ? translate('prosody_terminal_falling')
+                                        : liveAttempt.prosody.intonation.terminalTone === 'rising'
+                                        ? translate('prosody_terminal_rising')
+                                        : translate('prosody_terminal_level')}
+                                </Tag>
+                            </div>
+                        </Col>
+                    </Row>
+                )}
+                {liveAttempt.prosodyStatus === 'done' && !liveAttempt.prosody?.intonation && (
+                    <Typography.Text type="secondary">{translate('prosody_failed')}</Typography.Text>
+                )}
+            </Card>
 
             <Space style={{ marginTop: 20 }} wrap>
                 <Button type="primary" icon={<RedoOutlined />} onClick={onRetry}>
