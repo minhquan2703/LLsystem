@@ -225,6 +225,24 @@ declare global {
         longPauseCount: number;
     }
 
+    interface ISpeakingProsodyIntonation {
+        pitchRangeSemitones: number;
+        f0Mean: number;
+        f0Std: number;
+        declinationSlope: number;
+        voicedRatio: number;
+        terminalTone: 'falling' | 'rising' | 'level';
+    }
+
+    interface ISpeakingProsody {
+        intonation: ISpeakingProsodyIntonation | null;
+        alignment: null;
+        rhythm: null;
+        pronunciation: null;
+        vowelSpace: null;
+        error: string | null;
+    }
+
     interface ISpeakingAttempt {
         id: number;
         userId: string;
@@ -240,7 +258,19 @@ declare global {
         bandOverall: number;
         feedback: ISpeakingFeedback;
         metrics: ISpeakingMetrics;
+        prosody: ISpeakingProsody | null;
+        prosodyStatus: string;
         createdAt: string;
+    }
+
+    interface ISpeakingProgressPoint {
+        weekStart: string;
+        avgOverall: number;
+        avgFluency: number;
+        avgLexical: number;
+        avgGrammar: number;
+        avgPronunciation: number;
+        attemptCount: number;
     }
 
     // ── Vocab Practice ────────────────────────────────────────────────────────────

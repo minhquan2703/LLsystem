@@ -191,6 +191,18 @@ export const handleSubmitSpeakingAttemptAction = async (data: {
     return res;
 }
 
+export const handleGetSpeakingAttemptAction = async (id: number) => {
+    const session = await auth();
+    const res = await sendRequest<IBackendRes<ISpeakingAttempt>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/speaking/attempts/${id}`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+    });
+    return res;
+};
+
 export const handleDeleteSpeakingAttemptAction = async (id: number) => {
     const session = await auth();
     const res = await sendRequest<IBackendRes<{ id: number }>>({
