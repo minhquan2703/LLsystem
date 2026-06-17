@@ -11,7 +11,7 @@ export default async function SpeakingPage() {
         redirect('/auth/login');
     }
 
-    const [questionsRes, historyRes] = await Promise.all([
+    const [questionsRes, historyRes, progressRes] = await Promise.all([
         sendRequest<IBackendRes<ISpeakingQuestion[]>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/speaking/questions`,
             method: 'GET',
@@ -26,6 +26,13 @@ export default async function SpeakingPage() {
                 Authorization: `Bearer ${session.user?.access_token}`,
             },
         }),
+        sendRequest<IBackendRes<ISpeakingProgressPoint[]>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/speaking/progress?weeks=12`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${session.user?.access_token}`,
+            },
+        }),
     ]);
 
     return (
@@ -34,6 +41,7 @@ export default async function SpeakingPage() {
             <SpeakingPractice
                 questions={questionsRes?.data ?? []}
                 history={historyRes?.data ?? []}
+                progress={progressRes?.data ?? []}
             />
         </div>
     );

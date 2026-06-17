@@ -145,6 +145,33 @@
     height: 32px;
 }
 
+.compareColLabel {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.compareRow {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 8px 0;
+}
+
+.compareLabel {
+    color: #374151;
+    font-weight: 500;
+}
+
+.compareNeutral {
+    color: #9ca3af;
+}
+
+.compareTranscript {
+    font-style: italic;
+    color: #374151;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
 @media (max-width: 575px) {
     .historyRow {
         flex-direction: column;

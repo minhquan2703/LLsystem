@@ -1,19 +1,22 @@
 'use client';
 import { useState } from 'react';
-import { Button, Card, Col, Empty, List, message, Popconfirm, Row, Segmented, Tag } from 'antd';
+import { Button, Card, Col, Empty, List, message, Popconfirm, Row, Segmented, Tabs, Tag } from 'antd';
 import { AudioOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { handleDeleteSpeakingAttemptAction } from '@/utils/actions';
 import SpeakingRecorder from './speaking.recorder';
+import SpeakingProgress from './speaking.progress';
+import SpeakingCompare from './speaking.compare';
 import { bandColor } from './speaking.result';
 import styles from './page.module.css';
 
 interface Props {
     questions: ISpeakingQuestion[];
     history: ISpeakingAttempt[];
+    progress: ISpeakingProgressPoint[];
 }
 
-export default function SpeakingPractice({ questions, history }: Props) {
+export default function SpeakingPractice({ questions, history, progress }: Props) {
     const [part, setPart] = useState<SpeakingPart>(1);
     const [currentQuestion, setCurrentQuestion] = useState<ISpeakingQuestion | null>(null);
     const [historyList, setHistoryList] = useState<ISpeakingAttempt[]>(history);
@@ -44,11 +47,8 @@ export default function SpeakingPractice({ questions, history }: Props) {
     const questionsOfPart = questions.filter((question) => question.part === part);
     const topics = Array.from(new Set(questionsOfPart.map((question) => question.topic)));
 
-    return (
-        <div className={styles.container}>
-            <h1 className={styles.title}>{translate('title')}</h1>
-            <p className={styles.subtitle}>{translate('subtitle')}</p>
-
+    const practiceTab = (
+        <>
             <Segmented
                 block
                 size="large"
@@ -131,6 +131,22 @@ export default function SpeakingPractice({ questions, history }: Props) {
                     />
                 </Card>
             )}
+        </>
+    );
+
+    return (
+        <div className={styles.container}>
+            <h1 className={styles.title}>{translate('title')}</h1>
+            <p className={styles.subtitle}>{translate('subtitle')}</p>
+
+            <Tabs
+                defaultActiveKey="practice"
+                items={[
+                    { key: 'practice', label: translate('tab_practice'), children: practiceTab },
+                    { key: 'progress', label: translate('tab_progress'), children: <SpeakingProgress progress={progress} /> },
+                    { key: 'compare', label: translate('tab_compare'), children: <SpeakingCompare history={historyList} /> },
+                ]}
+            />
         </div>
     );
 }
