@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { SchemaType, ResponseSchema } from '@google/generative-ai';
 import { AppErrorCode } from '@/common/errors.enum';
 import { GeminiService } from '@/modules/gemini/gemini.service';
 import { StorageService } from '@/modules/storage/storage.service';
 import { SpeakingQuestion } from '@/modules/speaking/entities/speaking-question.entity';
-import { SpeakingAttempt, SpeakingFeedback, SpeakingMetrics } from '@/modules/speaking/entities/speaking-attempt.entity';
+import { SpeakingAttempt, SpeakingFeedback, SpeakingMetrics, SpeakingProsody } from '@/modules/speaking/entities/speaking-attempt.entity';
 import { SubmitSpeakingAttemptDto } from '@/modules/speaking/dto/submit-speaking-attempt.dto';
 
 //base64 ~14M ký tự ≈ 10MB audio — quá đủ cho 2 phút ghi âm
@@ -115,6 +115,86 @@ export class SpeakingService {
         });
     }
 
+    getProgress = async (userId: string, weeks: number) => {
+        //mốc bắt đầu = đầu ngày hôm nay lùi về N tuần
+        const since = new Date();
+        since.setHours(0, 0, 0, 0);
+        since.setDate(since.getDate() - weeks * 7);
+
+        const attempts = await this.attemptRepo.find({
+            where: { userId, createdAt: MoreThanOrEqual(since) },
+            order: { createdAt: 'ASC' },
+            loadEagerRelations: false,
+            select: {
+                bandFluency: true,
+                bandLexical: true,
+                bandGrammar: true,
+                bandPronunciation: true,
+                bandOverall: true,
+                createdAt: true,
+            },
+        });
+
+        //gom các lần làm theo tuần, khóa là mốc thứ hai đầu tuần
+        const weekGroups = new Map<
+            string,
+            { sumOverall: number; sumFluency: number; sumLexical: number; sumGrammar: number; sumPronunciation: number; count: number }
+        >();
+        for (const attempt of attempts) {
+            const weekStart = this.getWeekStart(attempt.createdAt);
+            const group = weekGroups.get(weekStart) ?? {
+                sumOverall: 0,
+                sumFluency: 0,
+                sumLexical: 0,
+                sumGrammar: 0,
+                sumPronunciation: 0,
+                count: 0,
+            };
+            group.sumOverall += attempt.bandOverall;
+            group.sumFluency += attempt.bandFluency;
+            group.sumLexical += attempt.bandLexical;
+            group.sumGrammar += attempt.bandGrammar;
+            group.sumPronunciation += attempt.bandPronunciation;
+            group.count += 1;
+            weekGroups.set(weekStart, group);
+        }
+
+        //tính band trung bình mỗi tuần, sắp xếp theo thời gian tăng dần
+        return [...weekGroups.entries()]
+            .map(([weekStart, group]) => ({
+                weekStart,
+                avgOverall: this.roundOne(group.sumOverall / group.count),
+                avgFluency: this.roundOne(group.sumFluency / group.count),
+                avgLexical: this.roundOne(group.sumLexical / group.count),
+                avgGrammar: this.roundOne(group.sumGrammar / group.count),
+                avgPronunciation: this.roundOne(group.sumPronunciation / group.count),
+                attemptCount: group.count,
+            }))
+            .sort((a, b) => a.weekStart.localeCompare(b.weekStart));
+    };
+
+    private getWeekStart = (date: Date): string => {
+        const localDate = new Date(date);
+        localDate.setHours(0, 0, 0, 0);
+        //getDay: 0=chủ nhật, 1=thứ hai; đưa lùi về thứ hai đầu tuần
+        const dayOfWeek = localDate.getDay();
+        const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        localDate.setDate(localDate.getDate() - daysSinceMonday);
+        return localDate.toISOString().slice(0, 10);
+    };
+
+    private roundOne = (value: number): number => {
+        return Math.round(value * 10) / 10;
+    };
+
+    getAttemptById = async (userId: string, attemptId: number) => {
+        const attempt = await this.attemptRepo.findOne({ where: { id: attemptId, userId } });
+        if (!attempt) {
+            throw new BadRequestException(AppErrorCode.SPEAKING_ATTEMPT_NOT_FOUND);
+        }
+        return attempt;
+    };
+
     async deleteAttempt(userId: string, attemptId: number) {
         const attempt = await this.attemptRepo.findOne({ where: { id: attemptId, userId } });
         if (!attempt) {
@@ -189,6 +269,9 @@ export class SpeakingService {
         });
         saved.audioUrl = audioUrl;
         await this.attemptRepo.save(saved);
+
+        //fire-and-forget: không await để không block response trả về user
+        this.callAndUpdateProsody(saved.id, audioUrl, grading.transcript).catch(() => {});
 
         return this.attemptRepo.findOne({ where: { id: saved.id } });
     }
@@ -286,6 +369,32 @@ Return only valid JSON matching the schema.`;
             longPauseCount: dto.longPauseCount ?? 0,
         };
     }
+
+    private callAndUpdateProsody = async (attemptId: number, audioUrl: string, transcript: string): Promise<void> => {
+        const prosodyServiceUrl = this.configService.get<string>('PROSODY_SERVICE_URL');
+        if (!prosodyServiceUrl) {
+            //không cấu hình service → mark failed ngay để frontend không poll vô tận
+            await this.attemptRepo.update(attemptId, { prosodyStatus: 'failed' }).catch(() => {});
+            return;
+        }
+        try {
+            await this.attemptRepo.update(attemptId, { prosodyStatus: 'processing' });
+            const response = await fetch(`${prosodyServiceUrl}/analyze`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ attempt_id: attemptId, audio_url: audioUrl, transcript }),
+                signal: AbortSignal.timeout(120_000),
+            });
+            if (!response.ok) {
+                throw new Error(`prosody service ${response.status}`);
+            }
+            const report = (await response.json()) as SpeakingProsody;
+            await this.attemptRepo.update(attemptId, { prosody: report, prosodyStatus: 'done' });
+        } catch (error) {
+            this.logger.error(`Prosody failed for attempt ${attemptId}: ${(error as Error)?.message}`);
+            await this.attemptRepo.update(attemptId, { prosodyStatus: 'failed' }).catch(() => {});
+        }
+    };
 
     private clampBand(value: number): number {
         if (typeof value !== 'number' || Number.isNaN(value)) {

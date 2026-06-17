@@ -31,6 +31,24 @@ export interface SpeakingMetrics {
     longPauseCount: number;
 }
 
+export interface SpeakingProsodyIntonation {
+    pitchRangeSemitones: number;
+    f0Mean: number;
+    f0Std: number;
+    declinationSlope: number;
+    voicedRatio: number;
+    terminalTone: 'falling' | 'rising' | 'level';
+}
+
+export interface SpeakingProsody {
+    intonation: SpeakingProsodyIntonation | null;
+    alignment: null;
+    rhythm: null;
+    pronunciation: null;
+    vowelSpace: null;
+    error: string | null;
+}
+
 @Entity('speaking_attempts')
 export class SpeakingAttempt {
     @PrimaryGeneratedColumn()
@@ -75,6 +93,12 @@ export class SpeakingAttempt {
 
     @Column({ type: 'jsonb' })
     metrics: SpeakingMetrics;
+
+    @Column({ type: 'jsonb', nullable: true })
+    prosody: SpeakingProsody | null;
+
+    @Column({ type: 'varchar', length: 16, default: 'pending' })
+    prosodyStatus: string;
 
     @CreateDateColumn()
     createdAt: Date;

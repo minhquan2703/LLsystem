@@ -13,6 +13,8 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "dev": "nest start --watch",
+    "prosody:setup": "cd ../prosody-service && python -m venv .venv && .venv\\Scripts\\pip install -r requirements.txt",
+    "prosody:dev": "cd ../prosody-service && .venv\\Scripts\\uvicorn main:app --reload --port 8001",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "import:cedict": "ts-node -r tsconfig-paths/register src/scripts/import-cedict.ts",

@@ -31,6 +31,19 @@ export class SpeakingController {
         return this.speakingService.getHistory(req.user._id);
     }
 
+    @Get('attempts/:id')
+    @ResponseMessage('Lấy attempt speaking thành công')
+    getAttemptById(@Req() req: IAuthRequest, @Param('id', ParseIntPipe) id: number) {
+        return this.speakingService.getAttemptById(req.user._id, id);
+    }
+
+    @Get('progress')
+    @ResponseMessage('Lấy tiến độ speaking thành công')
+    getProgress(@Req() req: IAuthRequest, @Query('weeks') weeks?: string) {
+        const parsedWeeks = weeks ? parseInt(weeks, 10) : 12;
+        return this.speakingService.getProgress(req.user._id, parsedWeeks);
+    }
+
     @Delete('attempts/:id')
     @ResponseMessage('Xóa bài speaking thành công')
     deleteAttempt(@Req() req: IAuthRequest, @Param('id', ParseIntPipe) id: number) {
