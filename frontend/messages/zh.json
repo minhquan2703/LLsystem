@@ -18,7 +18,8 @@
         "SPEAKING_GRADING_FAILED": "AI评分失败，请重试",
         "SPEAKING_STORAGE_FAILED": "无法保存录音，请重试",
         "SPEAKING_AUDIO_SILENT": "录音中未检测到语音，请检查麦克风后重试",
-        "SPEAKING_ATTEMPT_NOT_FOUND": "未找到口语记录"
+        "SPEAKING_ATTEMPT_NOT_FOUND": "未找到口语记录",
+        "SPEAKING_NOT_ENGLISH": "请用英语作答，系统只评分英语回答"
     },
     "nav": {
         "home": "首页",
@@ -173,7 +174,15 @@
         "prosody_terminal_tone": "句末语调",
         "prosody_terminal_falling": "下降（陈述）",
         "prosody_terminal_rising": "上升（疑问）",
-        "prosody_terminal_level": "平稳"
+        "prosody_terminal_level": "平稳",
+        "rhythm_title": "语音节奏",
+        "rhythm_npvi": "节奏 nPVI",
+        "rhythm_percent_v": "元音时长占比",
+        "rhythm_varco_v": "元音变化度",
+        "rhythm_hint": "nPVI 衡量相邻音节间元音时长的差异。母语英语为重音计时（≈{ref}）；越南语为音节计时（≈45）。数值越高，节奏越接近英语。",
+        "rhythm_native_english": "母语英语 ≈ {ref}",
+        "rhythm_close": "你的节奏接近母语英语的重音计时",
+        "rhythm_syllable": "你的节奏偏向音节计时 — 试着强调实词并弱化弱元音"
     },
     "quiz": {
         "landing_title": "词汇测验",

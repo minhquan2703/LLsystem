@@ -18,7 +18,8 @@
         "SPEAKING_GRADING_FAILED": "AI grading failed, please try again",
         "SPEAKING_STORAGE_FAILED": "Could not save your recording, please try again",
         "SPEAKING_AUDIO_SILENT": "No speech detected in your recording. Please check your microphone and try again",
-        "SPEAKING_ATTEMPT_NOT_FOUND": "Speaking attempt not found"
+        "SPEAKING_ATTEMPT_NOT_FOUND": "Speaking attempt not found",
+        "SPEAKING_NOT_ENGLISH": "Please answer in English. Only English responses are graded"
     },
     "nav": {
         "home": "Home",
@@ -173,7 +174,15 @@
         "prosody_terminal_tone": "Sentence ending",
         "prosody_terminal_falling": "Falling (declarative)",
         "prosody_terminal_rising": "Rising (question?)",
-        "prosody_terminal_level": "Level"
+        "prosody_terminal_level": "Level",
+        "rhythm_title": "Speech rhythm",
+        "rhythm_npvi": "Rhythm nPVI",
+        "rhythm_percent_v": "Vowel time %",
+        "rhythm_varco_v": "Vowel variability",
+        "rhythm_hint": "nPVI measures how much vowel length varies between syllables. Native English is stress-timed (≈{ref}); Vietnamese is syllable-timed (≈45). Higher means more English-like rhythm.",
+        "rhythm_native_english": "Native English ≈ {ref}",
+        "rhythm_close": "Your rhythm is close to native English stress-timing",
+        "rhythm_syllable": "Your rhythm leans syllable-timed — try stressing content words and reducing weak vowels"
     },
     "quiz": {
         "landing_title": "Vocabulary Quiz",

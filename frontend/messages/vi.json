@@ -18,7 +18,8 @@
         "SPEAKING_GRADING_FAILED": "Chấm bài bằng AI thất bại, vui lòng thử lại",
         "SPEAKING_STORAGE_FAILED": "Không lưu được file ghi âm, vui lòng thử lại",
         "SPEAKING_AUDIO_SILENT": "Không nghe thấy giọng nói trong bản ghi âm. Vui lòng kiểm tra microphone và thử lại",
-        "SPEAKING_ATTEMPT_NOT_FOUND": "Không tìm thấy lượt làm speaking"
+        "SPEAKING_ATTEMPT_NOT_FOUND": "Không tìm thấy lượt làm speaking",
+        "SPEAKING_NOT_ENGLISH": "Vui lòng trả lời bằng tiếng Anh. Hệ thống chỉ chấm bài tiếng Anh"
     },
     "nav": {
         "home": "Trang chủ",
@@ -173,7 +174,15 @@
         "prosody_terminal_tone": "Ngữ điệu câu",
         "prosody_terminal_falling": "Xuống (khẳng định)",
         "prosody_terminal_rising": "Lên (câu hỏi?)",
-        "prosody_terminal_level": "Bằng phẳng"
+        "prosody_terminal_level": "Bằng phẳng",
+        "rhythm_title": "Nhịp điệu lời nói",
+        "rhythm_npvi": "Nhịp điệu nPVI",
+        "rhythm_percent_v": "Tỉ lệ thời gian nguyên âm",
+        "rhythm_varco_v": "Biến động nguyên âm",
+        "rhythm_hint": "nPVI đo mức chênh lệch độ dài nguyên âm giữa các âm tiết. Tiếng Anh bản ngữ theo trọng âm (≈{ref}); tiếng Việt theo âm tiết (≈45). Cao hơn nghĩa là nhịp điệu giống tiếng Anh hơn.",
+        "rhythm_native_english": "Tiếng Anh bản ngữ ≈ {ref}",
+        "rhythm_close": "Nhịp điệu của bạn gần với kiểu trọng âm của tiếng Anh bản ngữ",
+        "rhythm_syllable": "Nhịp điệu của bạn nghiêng về kiểu âm tiết — hãy nhấn trọng âm vào từ nội dung và giảm nhẹ nguyên âm yếu"
     },
     "quiz": {
         "landing_title": "Quiz từ vựng",

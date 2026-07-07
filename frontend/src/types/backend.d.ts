@@ -234,10 +234,37 @@ declare global {
         terminalTone: 'falling' | 'rising' | 'level';
     }
 
+    interface ISpeakingProsodyPhoneme {
+        phone: string;
+        start: number;
+        end: number;
+    }
+
+    interface ISpeakingProsodyWord {
+        word: string;
+        start: number;
+        end: number;
+    }
+
+    interface ISpeakingProsodyAlignment {
+        words: ISpeakingProsodyWord[];
+        phonemes: ISpeakingProsodyPhoneme[];
+    }
+
+    interface ISpeakingProsodyRhythm {
+        nPVI: number | null;
+        rPVI: number | null;
+        percentV: number | null;
+        varcoV: number | null;
+        vocalicCount: number;
+        consonantalCount: number;
+        nativeRefNPVI: number;
+    }
+
     interface ISpeakingProsody {
         intonation: ISpeakingProsodyIntonation | null;
-        alignment: null;
-        rhythm: null;
+        alignment: ISpeakingProsodyAlignment | null;
+        rhythm: ISpeakingProsodyRhythm | null;
         pronunciation: null;
         vowelSpace: null;
         error: string | null;

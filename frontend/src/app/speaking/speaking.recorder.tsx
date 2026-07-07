@@ -12,7 +12,16 @@ type RecorderPhase = 'ready' | 'prep' | 'recording' | 'recorded' | 'submitting' 
 
 const PREP_SECONDS = 60;
 const MIN_RECORD_SECONDS = 3;
-const KNOWN_ERROR_CODES = ['SPEAKING_QUESTION_NOT_FOUND', 'SPEAKING_AUDIO_TOO_LARGE', 'SPEAKING_GRADING_FAILED', 'SPEAKING_STORAGE_FAILED', 'SPEAKING_AUDIO_SILENT'];
+const KNOWN_ERROR_CODES = [
+    'SPEAKING_QUESTION_NOT_FOUND', 
+    'SPEAKING_AUDIO_TOO_LARGE',
+    'SPEAKING_GRADING_FAILED',
+    'SPEAKING_STORAGE_FAILED', 
+    'SPEAKING_AUDIO_SILENT',
+    'SPEAKING_NOT_ENGLISH'
+    ];
+
+
 const MIN_SPEECH_RATIO = 0.05;
 
 function formatSeconds(totalSeconds: number): string {

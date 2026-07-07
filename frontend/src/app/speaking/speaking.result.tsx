@@ -19,6 +19,71 @@ export function bandColor(band: number): string {
     return '#dc2626';
 }
 
+//thang so sánh nPVI: 35 (rất syllable-timed) → 80 (rất stress-timed), gói mốc VN 45 và EN 65 vào giữa
+const RHYTHM_SCALE_MIN = 35;
+const RHYTHM_SCALE_MAX = 80;
+//ngưỡng coi là gần bản ngữ — điểm giữa lệch về phía stress-timing tiếng Anh
+const RHYTHM_NATIVE_THRESHOLD = 58;
+
+function rhythmScalePosition(value: number): number {
+    const percent = ((value - RHYTHM_SCALE_MIN) / (RHYTHM_SCALE_MAX - RHYTHM_SCALE_MIN)) * 100;
+    return Math.min(100, Math.max(0, percent));
+}
+
+function RhythmCard({ rhythm }: { rhythm: ISpeakingProsodyRhythm }) {
+    const translate = useTranslations('speaking');
+    const nPVI = rhythm.nPVI as number;
+    const nativeRef = rhythm.nativeRefNPVI;
+    const isNativeLike = nPVI >= RHYTHM_NATIVE_THRESHOLD;
+
+    return (
+        <Card title={translate('rhythm_title')} size="small" style={{ marginTop: 12 }}>
+            <Row gutter={[12, 12]}>
+                <Col xs={24} md={8}>
+                    <Statistic
+                        title={translate('rhythm_npvi')}
+                        value={nPVI}
+                        precision={1}
+                        valueStyle={{ fontSize: 32, fontWeight: 700, color: isNativeLike ? '#16a34a' : '#d97706' }}
+                    />
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                        {translate('rhythm_native_english', { ref: nativeRef })}
+                    </Typography.Text>
+                </Col>
+                {rhythm.percentV != null && (
+                    <Col xs={12} md={8}>
+                        <Statistic title={translate('rhythm_percent_v')} value={rhythm.percentV} precision={1} suffix="%" />
+                    </Col>
+                )}
+                {rhythm.varcoV != null && (
+                    <Col xs={12} md={8}>
+                        <Statistic title={translate('rhythm_varco_v')} value={rhythm.varcoV} precision={1} />
+                    </Col>
+                )}
+            </Row>
+
+            <div className={styles.rhythmScale}>
+                <div className={styles.rhythmTrack}>
+                    <span className={styles.rhythmMarkVn} style={{ left: `${rhythmScalePosition(45)}%` }} />
+                    <span className={styles.rhythmMarkEn} style={{ left: `${rhythmScalePosition(nativeRef)}%` }} />
+                    <span className={styles.rhythmMarkUser} style={{ left: `${rhythmScalePosition(nPVI)}%` }} />
+                </div>
+                <div className={styles.rhythmScaleLabels}>
+                    <span>VN ≈ 45</span>
+                    <span>EN ≈ {nativeRef}</span>
+                </div>
+            </div>
+
+            <Typography.Paragraph type={isNativeLike ? 'success' : 'warning'} style={{ marginTop: 12, marginBottom: 4 }}>
+                {isNativeLike ? translate('rhythm_close') : translate('rhythm_syllable')}
+            </Typography.Paragraph>
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                {translate('rhythm_hint', { ref: nativeRef })}
+            </Typography.Text>
+        </Card>
+    );
+}
+
 interface Props {
     attempt: ISpeakingAttempt;
     onRetry: () => void;
@@ -250,6 +315,10 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
                     <Typography.Text type="secondary">{translate('prosody_failed')}</Typography.Text>
                 )}
             </Card>
+
+            {liveAttempt.prosodyStatus === 'done' && liveAttempt.prosody?.rhythm?.nPVI != null && (
+                <RhythmCard rhythm={liveAttempt.prosody.rhythm} />
+            )}
 
             <Space style={{ marginTop: 20 }} wrap>
                 <Button type="primary" icon={<RedoOutlined />} onClick={onRetry}>
