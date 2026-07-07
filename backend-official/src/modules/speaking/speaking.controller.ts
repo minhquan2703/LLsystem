@@ -1,5 +1,6 @@
 import { Controller, Post, Get, Delete, Body, Param, Query, Req, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { SpeakingService } from '@/modules/speaking/speaking.service';
 import { SubmitSpeakingAttemptDto } from '@/modules/speaking/dto/submit-speaking-attempt.dto';
 import { ResponseMessage } from '@/decorator/customize';
@@ -21,6 +22,8 @@ export class SpeakingController {
 
     @Post('attempts')
     @ResponseMessage('Chấm bài speaking thành công')
+    //giới hạn riêng vì mỗi lần gọi tốn 1 request Gemini (chi phí + rủi ro spam)
+    @Throttle({ default: { limit: 10, ttl: 60000 } })
     submitAttempt(@Req() req: IAuthRequest, @Body() submitSpeakingAttemptDto: SubmitSpeakingAttemptDto) {
         return this.speakingService.submitAttempt(req.user._id, submitSpeakingAttemptDto);
     }
@@ -33,6 +36,8 @@ export class SpeakingController {
 
     @Get('attempts/:id')
     @ResponseMessage('Lấy attempt speaking thành công')
+    //frontend poll endpoint này mỗi 3s để chờ prosody xử lý xong — không nên giới hạn
+    @SkipThrottle()
     getAttemptById(@Req() req: IAuthRequest, @Param('id', ParseIntPipe) id: number) {
         return this.speakingService.getAttemptById(req.user._id, id);
     }

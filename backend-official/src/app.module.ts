@@ -21,7 +21,8 @@ import { GeminiModule } from '@/modules/gemini/gemini.module';
 import { StorageModule } from '@/modules/storage/storage.module';
 import { EnglishWordsModule } from '@/modules/english-words/english-words.module';
 import { VocabPracticeModule } from '@/modules/vocab-practice/vocab-practice.module';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { UserThrottlerGuard } from '@/core/user-throttler.guard';
 
 @Module({
   imports: [
@@ -38,9 +39,11 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     StorageModule,
     EnglishWordsModule,
     VocabPracticeModule,
+    //limit mặc định rộng rãi cho hoạt động bình thường (bao gồm polling prosody 20 req/phút/user);
+    //endpoint nhạy cảm/tốn phí (login, register, submit speaking...) tự siết chặt hơn bằng @Throttle() riêng
     ThrottlerModule.forRoot([{
       ttl: 60000,
-      limit: 10,
+      limit: 100,
     }]),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
@@ -84,7 +87,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: UserThrottlerGuard },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
   ],
 })

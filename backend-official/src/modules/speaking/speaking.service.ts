@@ -4,6 +4,8 @@ import { MoreThanOrEqual, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { SchemaType, ResponseSchema } from '@google/generative-ai';
 import { AppErrorCode } from '@/common/errors.enum';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const detectLanguage = require('franc') as (text: string) => string;
 import { GeminiService } from '@/modules/gemini/gemini.service';
 import { StorageService } from '@/modules/storage/storage.service';
 import { SpeakingQuestion } from '@/modules/speaking/entities/speaking-question.entity';
@@ -14,6 +16,10 @@ import { SubmitSpeakingAttemptDto } from '@/modules/speaking/dto/submit-speaking
 const MAX_AUDIO_BASE64_LENGTH = 14_000_000;
 //tỉ lệ tín hiệu giọng nói tối thiểu — dưới ngưỡng này thì audio là im lặng hoặc nhiễu
 const MIN_SPEECH_RATIO = 0.05;
+//số từ tối thiểu trong transcript để chạy language detection (ngắn hơn thì franc thiếu trigram)
+const MIN_WORDS_FOR_LANG_CHECK = 10;
+//franc hay nhầm English ngắn/informal thành các ngôn ngữ Germanic gần tiếng Anh — cho phép các code này
+const ALLOWED_LANGUAGE_CODES = new Set(['eng', 'und', 'sco', 'nob', 'nno', 'dan', 'swe', 'deu', 'nld', 'afr', 'fry']);
 
 const FILLER_WORDS = ['um', 'uh', 'er', 'erm', 'hmm', 'ah'];
 
@@ -226,6 +232,14 @@ export class SpeakingService {
         if (!grading.audioContainsSpeech) {
             throw new BadRequestException(AppErrorCode.SPEAKING_AUDIO_SILENT);
         }
+        //kiểm tra ngôn ngữ bằng franc — chỉ khi transcript đủ dài để trigram hoạt động tin cậy
+        const transcriptWords = grading.transcript.split(/\s+/).filter((word) => word.length > 0);
+        if (transcriptWords.length >= MIN_WORDS_FOR_LANG_CHECK) {
+            const detectedLang = detectLanguage(grading.transcript);
+            if (!ALLOWED_LANGUAGE_CODES.has(detectedLang)) {
+                throw new BadRequestException(AppErrorCode.SPEAKING_NOT_ENGLISH);
+            }
+        }
         const metrics = this.computeMetrics(grading.transcript, dto);
 
         const feedback: SpeakingFeedback = {
@@ -315,7 +329,7 @@ Context:
 - Recording length: ${Math.round(durationSeconds)} seconds
 
 Tasks:
-1. audioContainsSpeech: set to true if the audio contains a human speaking in English; set to false if the audio is silent, contains only background noise, or is not in English.
+1. audioContainsSpeech: set to true if the audio contains a human voice; set to false if the audio is silent or contains only background noise.
 2. transcript: transcribe the audio VERBATIM, including filler sounds (um, uh, er), repetitions and false starts. Do not clean it up. If audioContainsSpeech is false, set this to an empty string.
 3. Grade each criterion 0-9 (half bands like 5.5 and 6.5 are allowed). If audioContainsSpeech is false, set all bands to 0:
    - bandFluency (Fluency & Coherence): speech rate, pausing/hesitation, self-correction, discourse markers, topic development

@@ -40,10 +40,37 @@ export interface SpeakingProsodyIntonation {
     terminalTone: 'falling' | 'rising' | 'level';
 }
 
+export interface SpeakingProsodyPhoneme {
+    phone: string;
+    start: number;
+    end: number;
+}
+
+export interface SpeakingProsodyWord {
+    word: string;
+    start: number;
+    end: number;
+}
+
+export interface SpeakingProsodyAlignment {
+    words: SpeakingProsodyWord[];
+    phonemes: SpeakingProsodyPhoneme[];
+}
+
+export interface SpeakingProsodyRhythm {
+    nPVI: number | null;
+    rPVI: number | null;
+    percentV: number | null;
+    varcoV: number | null;
+    vocalicCount: number;
+    consonantalCount: number;
+    nativeRefNPVI: number;
+}
+
 export interface SpeakingProsody {
     intonation: SpeakingProsodyIntonation | null;
-    alignment: null;
-    rhythm: null;
+    alignment: SpeakingProsodyAlignment | null;
+    rhythm: SpeakingProsodyRhythm | null;
     pronunciation: null;
     vowelSpace: null;
     error: string | null;
