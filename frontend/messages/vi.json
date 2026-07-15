@@ -182,7 +182,9 @@
         "rhythm_hint": "nPVI đo mức chênh lệch độ dài nguyên âm giữa các âm tiết. Tiếng Anh bản ngữ theo trọng âm (≈{ref}); tiếng Việt theo âm tiết (≈45). Cao hơn nghĩa là nhịp điệu giống tiếng Anh hơn.",
         "rhythm_native_english": "Tiếng Anh bản ngữ ≈ {ref}",
         "rhythm_close": "Nhịp điệu của bạn gần với kiểu trọng âm của tiếng Anh bản ngữ",
-        "rhythm_syllable": "Nhịp điệu của bạn nghiêng về kiểu âm tiết — hãy nhấn trọng âm vào từ nội dung và giảm nhẹ nguyên âm yếu"
+        "rhythm_syllable": "Nhịp điệu của bạn nghiêng về kiểu âm tiết — hãy nhấn trọng âm vào từ nội dung và giảm nhẹ nguyên âm yếu",
+        "pitch_contour_hint": "Bấm play để xem cao độ giọng nói của bạn lên xuống theo thời gian thực, từng từ một.",
+        "pitch_contour_no_data": "Không có dữ liệu đường ngữ điệu cho lần làm này."
     },
     "quiz": {
         "landing_title": "Quiz từ vựng",

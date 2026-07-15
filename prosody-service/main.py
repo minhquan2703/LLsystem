@@ -90,6 +90,23 @@ def _analyze_sync(audio_url: str, transcript: str) -> dict:
         }
 
 
+#số điểm tối đa trả về cho đường cong pitch — đủ mượt để vẽ, đủ nhẹ cho JSON/render
+MAX_CONTOUR_POINTS = 200
+
+
+def _build_pitch_contour(times, f0_all):
+    #lấy mẫu thưa trên toàn bộ trục thời gian (kể cả đoạn im lặng) để giữ đúng khoảng nghỉ khi vẽ karaoke
+    stride = max(1, len(times) // MAX_CONTOUR_POINTS)
+    contour = []
+    for index in range(0, len(times), stride):
+        f0 = float(f0_all[index])
+        contour.append({
+            "t": round(float(times[index]), 3),
+            "f0": round(f0, 1) if f0 > 0 else None,
+        })
+    return contour
+
+
 def _analyze_intonation(wav_path: str):
     sound = parselmouth.Sound(wav_path)
     #pitch_floor=70 Hz ≈ bass male, pitch_ceiling=400 Hz ≈ high female
@@ -135,6 +152,7 @@ def _analyze_intonation(wav_path: str):
         "declinationSlope": round(declination_slope, 2),
         "voicedRatio": round(voiced_ratio, 3),
         "terminalTone": terminal_tone,
+        "pitchContour": _build_pitch_contour(times, f0_all),
     }
 
 

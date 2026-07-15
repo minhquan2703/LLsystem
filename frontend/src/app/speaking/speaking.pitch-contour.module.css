@@ -1,0 +1,73 @@
+.card {
+    background: linear-gradient(180deg, #0f1222 0%, #1a1033 100%);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.controlsRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.playButton {
+    color: #f5f3ff !important;
+    font-size: 34px !important;
+    width: 40px;
+    height: 40px;
+}
+
+.clock {
+    color: #c4b5fd;
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+}
+
+.chart {
+    width: 100%;
+    height: 140px;
+    display: block;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.wordTick {
+    stroke: rgba(196, 181, 253, 0.35);
+    stroke-width: 1;
+}
+
+.playhead {
+    stroke: #f43f5e;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.8));
+}
+
+.karaokeText {
+    margin: 12px 0 4px;
+    line-height: 1.9;
+    font-size: 15px;
+}
+
+.wordUpcoming {
+    color: #6b7280;
+}
+
+.wordSpoken {
+    color: #e5e7eb;
+}
+
+.wordActive {
+    color: #fff;
+    background: linear-gradient(90deg, #3b82f6, #ec4899);
+    padding: 1px 4px;
+    border-radius: 4px;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+}
+
+.hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #8b85a8 !important;
+}

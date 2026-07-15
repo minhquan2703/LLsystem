@@ -182,7 +182,9 @@
         "rhythm_hint": "nPVI measures how much vowel length varies between syllables. Native English is stress-timed (≈{ref}); Vietnamese is syllable-timed (≈45). Higher means more English-like rhythm.",
         "rhythm_native_english": "Native English ≈ {ref}",
         "rhythm_close": "Your rhythm is close to native English stress-timing",
-        "rhythm_syllable": "Your rhythm leans syllable-timed — try stressing content words and reducing weak vowels"
+        "rhythm_syllable": "Your rhythm leans syllable-timed — try stressing content words and reducing weak vowels",
+        "pitch_contour_hint": "Press play and watch your pitch rise and fall in real time, word by word.",
+        "pitch_contour_no_data": "Pitch contour unavailable for this attempt."
     },
     "quiz": {
         "landing_title": "Vocabulary Quiz",

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { handleSubmitSpeakingAttemptAction } from '@/utils/actions';
 import { analyzePauses, blobToBase64 } from './speaking.audio';
 import SpeakingResult from './speaking.result';
+import VoiceOrb from './speaking.voice-orb';
 import styles from './page.module.css';
 
 type RecorderPhase = 'ready' | 'prep' | 'recording' | 'recorded' | 'submitting' | 'result';
@@ -42,6 +43,7 @@ export default function SpeakingRecorder({ question, onBack }: Props) {
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [attempt, setAttempt] = useState<ISpeakingAttempt | null>(null);
+    const [liveStream, setLiveStream] = useState<MediaStream | null>(null);
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
@@ -116,6 +118,7 @@ export default function SpeakingRecorder({ question, onBack }: Props) {
                 setAudioBlob(blob);
                 setAudioUrl(url);
                 stream.getTracks().forEach((track) => track.stop());
+                setLiveStream(null);
                 setPhase('recorded');
             };
 
@@ -123,6 +126,7 @@ export default function SpeakingRecorder({ question, onBack }: Props) {
             recorder.start();
             recordStartRef.current = Date.now();
             setElapsedSeconds(0);
+            setLiveStream(stream);
             setPhase('recording');
 
             timerRef.current = setInterval(() => {
@@ -276,6 +280,7 @@ export default function SpeakingRecorder({ question, onBack }: Props) {
 
             {phase === 'recording' && (
                 <Card className={styles.centerCard}>
+                    <VoiceOrb stream={liveStream} />
                     <div className={styles.recordingRow}>
                         <span className={styles.recordDot} />
                         <span>{translate('recording_label')}</span>

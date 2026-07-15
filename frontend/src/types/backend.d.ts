@@ -225,6 +225,11 @@ declare global {
         longPauseCount: number;
     }
 
+    interface ISpeakingProsodyContourPoint {
+        t: number;
+        f0: number | null;
+    }
+
     interface ISpeakingProsodyIntonation {
         pitchRangeSemitones: number;
         f0Mean: number;
@@ -232,6 +237,7 @@ declare global {
         declinationSlope: number;
         voicedRatio: number;
         terminalTone: 'falling' | 'rising' | 'level';
+        pitchContour: ISpeakingProsodyContourPoint[];
     }
 
     interface ISpeakingProsodyPhoneme {

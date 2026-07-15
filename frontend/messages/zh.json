@@ -182,7 +182,9 @@
         "rhythm_hint": "nPVI 衡量相邻音节间元音时长的差异。母语英语为重音计时（≈{ref}）；越南语为音节计时（≈45）。数值越高，节奏越接近英语。",
         "rhythm_native_english": "母语英语 ≈ {ref}",
         "rhythm_close": "你的节奏接近母语英语的重音计时",
-        "rhythm_syllable": "你的节奏偏向音节计时 — 试着强调实词并弱化弱元音"
+        "rhythm_syllable": "你的节奏偏向音节计时 — 试着强调实词并弱化弱元音",
+        "pitch_contour_hint": "点击播放，实时观看你的语调逐词起伏变化。",
+        "pitch_contour_no_data": "本次没有可用的语调曲线数据。"
     },
     "quiz": {
         "landing_title": "词汇测验",

@@ -31,6 +31,11 @@ export interface SpeakingMetrics {
     longPauseCount: number;
 }
 
+export interface SpeakingProsodyContourPoint {
+    t: number;
+    f0: number | null;
+}
+
 export interface SpeakingProsodyIntonation {
     pitchRangeSemitones: number;
     f0Mean: number;
@@ -38,6 +43,7 @@ export interface SpeakingProsodyIntonation {
     declinationSlope: number;
     voicedRatio: number;
     terminalTone: 'falling' | 'rising' | 'level';
+    pitchContour: SpeakingProsodyContourPoint[];
 }
 
 export interface SpeakingProsodyPhoneme {

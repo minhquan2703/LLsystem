@@ -4,6 +4,7 @@ import { Button, Card, Col, Collapse, List, Row, Space, Spin, Statistic, Tag, Ty
 import { RedoOutlined, UnorderedListOutlined, CheckCircleOutlined, RiseOutlined, SoundOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { handleGetSpeakingAttemptAction } from '@/utils/actions';
+import PitchContourCard from './speaking.pitch-contour';
 import styles from './page.module.css';
 
 export function bandColor(band: number): string {
@@ -95,6 +96,8 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
     const { feedback, metrics } = attempt;
     const [liveAttempt, setLiveAttempt] = useState(attempt);
     const pollCountRef = useRef(0);
+    const intonation = liveAttempt.prosody?.intonation;
+    const alignmentWords = liveAttempt.prosody?.alignment?.words;
 
     //poll mỗi 3s tối đa 20 lần (60s) cho đến khi prosodyStatus = done | failed
     useEffect(() => {
@@ -272,12 +275,12 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
                 {liveAttempt.prosodyStatus === 'failed' && (
                     <Typography.Text type="secondary">{translate('prosody_failed')}</Typography.Text>
                 )}
-                {liveAttempt.prosodyStatus === 'done' && liveAttempt.prosody?.intonation && (
+                {liveAttempt.prosodyStatus === 'done' && intonation && (
                     <Row gutter={[12, 12]}>
                         <Col xs={12} md={6}>
                             <Statistic
                                 title={translate('prosody_pitch_range')}
-                                value={liveAttempt.prosody.intonation.pitchRangeSemitones}
+                                value={intonation.pitchRangeSemitones}
                                 precision={1}
                                 suffix="st"
                             />
@@ -285,7 +288,7 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
                         <Col xs={12} md={6}>
                             <Statistic
                                 title={translate('prosody_f0_std')}
-                                value={liveAttempt.prosody.intonation.f0Std}
+                                value={intonation.f0Std}
                                 precision={1}
                                 suffix="Hz"
                             />
@@ -293,17 +296,17 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
                         <Col xs={12} md={6}>
                             <Statistic
                                 title={translate('prosody_voiced_ratio')}
-                                value={Math.round(liveAttempt.prosody.intonation.voicedRatio * 100)}
+                                value={Math.round(intonation.voicedRatio * 100)}
                                 suffix="%"
                             />
                         </Col>
                         <Col xs={12} md={6}>
                             <div>
                                 <div style={{ color: '#6b7280', fontSize: 14, marginBottom: 4 }}>{translate('prosody_terminal_tone')}</div>
-                                <Tag color={liveAttempt.prosody.intonation.terminalTone === 'falling' ? 'blue' : liveAttempt.prosody.intonation.terminalTone === 'rising' ? 'orange' : 'default'}>
-                                    {liveAttempt.prosody.intonation.terminalTone === 'falling'
+                                <Tag color={intonation.terminalTone === 'falling' ? 'blue' : intonation.terminalTone === 'rising' ? 'orange' : 'default'}>
+                                    {intonation.terminalTone === 'falling'
                                         ? translate('prosody_terminal_falling')
-                                        : liveAttempt.prosody.intonation.terminalTone === 'rising'
+                                        : intonation.terminalTone === 'rising'
                                         ? translate('prosody_terminal_rising')
                                         : translate('prosody_terminal_level')}
                                 </Tag>
@@ -311,8 +314,19 @@ export default function SpeakingResult({ attempt, onRetry, onBack }: Props) {
                         </Col>
                     </Row>
                 )}
-                {liveAttempt.prosodyStatus === 'done' && !liveAttempt.prosody?.intonation && (
+                {liveAttempt.prosodyStatus === 'done' && !intonation && (
                     <Typography.Text type="secondary">{translate('prosody_failed')}</Typography.Text>
+                )}
+
+                {liveAttempt.prosodyStatus === 'done' && liveAttempt.audioUrl && intonation && intonation.pitchContour && intonation.pitchContour.length > 0 && (
+                    <div style={{ marginTop: 16 }}>
+                        <PitchContourCard
+                            audioUrl={liveAttempt.audioUrl}
+                            durationSeconds={liveAttempt.durationSeconds}
+                            intonation={intonation}
+                            words={alignmentWords}
+                        />
+                    </div>
                 )}
             </Card>
 
